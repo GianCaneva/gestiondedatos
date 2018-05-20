@@ -43,7 +43,7 @@ CREATE TABLE BIG_DATA.Hotel (
 )
 
 CREATE TABLE BIG_DATA.Usuario (
-	username nvarchar (20) NOT NULL,
+	username nvarchar (255) NOT NULL,
 	password nvarchar (20),
 	idRol numeric (18,0),
 	nombre nvarchar (255),
