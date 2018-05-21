@@ -92,7 +92,7 @@ CREATE TABLE BIG_DATA.Habitacion (
 	vista nvarchar (50),
 	idTipo numeric (18,0) ,
 	comodidades nvarchar (255),
-	precio money,
+	porcentual numeric(18, 2),
 	PRIMARY KEY (idHabitacion),
 	FOREIGN KEY (idTipo) REFERENCES BIG_DATA.Tipo
 )
