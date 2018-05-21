@@ -161,6 +161,8 @@ CREATE TABLE BIG_DATA.Estadia (
 CREATE TABLE BIG_DATA.Factura (
 	idFactura numeric (18,0) IDENTITY (1,1) NOT NULL,
 	idEstadia numeric (18,0),
+	numero numeric (18,0),
+	fecha datetime,
 	total money,
 	PRIMARY KEY (idFactura),
 	FOREIGN KEY (idEstadia) REFERENCES BIG_DATA.Estadia (idEstadia)
