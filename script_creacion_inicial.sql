@@ -59,9 +59,9 @@ CREATE TABLE BIG_DATA.Usuario (
 )
 
 CREATE TABLE BIG_DATA.Tipo (
-	idTipo numeric (18,0) IDENTITY (1,1) NOT NULL,
-	nombre nvarchar (255),
-	precio money,
+	idTipo numeric (18,0) IDENTITY (1006,1) NOT NULL,
+	descripcion nvarchar (255),
+	precio numeric(18,2),
 	PRIMARY KEY (idTipo)
 )
 
