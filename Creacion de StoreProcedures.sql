@@ -7,16 +7,20 @@ BEGIN
 	from [gd_esquema].[Maestra]
 END
 GO
+
+
 --crea un store procedure de la tabla Tipo
-CREATE PROCEDURE [dbo].[SP_CargaTablaTipo]
+CREATE PROCEDURE SP_CargaTablaTipo
 AS
 BEGIN
-SET IDENTITY_INSERT [BIG_DATA].[Tipo] ON
+	SET IDENTITY_INSERT [BIG_DATA].[Tipo] ON
 	insert into [BIG_DATA].[Tipo] (idTipo,descripcion,precio)
 	select distinct Habitacion_Tipo_Codigo,Habitacion_Tipo_Descripcion,Habitacion_Tipo_Porcentual
 	from [gd_esquema].[Maestra]
-SET IDENTITY_INSERT [BIG_DATA].[Tipo] OFF
+	SET IDENTITY_INSERT [BIG_DATA].[Tipo] OFF
 END
+GO
+
 --crea un store procedure de la tabla Habitacion
 CREATE PROCEDURE SP_CargaTablaHabitacion
 AS
@@ -26,6 +30,8 @@ BEGIN
 	from [gd_esquema].[Maestra]
 END
 GO
+
+
 --crea un store procedure de la tabla Regimen
 CREATE PROCEDURE SP_CargaTablaRegimen
 AS
@@ -35,6 +41,9 @@ BEGIN
 	from [gd_esquema].[Maestra]
 END
 GO
+
+
+
 --crea un store procedure de la tabla Reserva
 CREATE PROCEDURE SP_CargaTablaReserva
 AS
@@ -44,6 +53,8 @@ BEGIN
 	from [gd_esquema].[Maestra]
 END
 GO
+
+
 --crea un store procedure de la tabla Estadia
 CREATE PROCEDURE SP_CargaTablaEstadia
 AS
@@ -53,6 +64,8 @@ BEGIN
 	from [gd_esquema].[Maestra]
 END
 GO
+
+
 --crea un store procedure de la tabla Consumible
 CREATE PROCEDURE SP_CargaTablaConsumible
 AS
@@ -62,6 +75,9 @@ BEGIN
 	from [gd_esquema].[Maestra]
 END
 GO
+
+
+
 --crea un store procedure de la tabla Item
 CREATE PROCEDURE SP_CargaTablaItem
 AS
@@ -71,6 +87,9 @@ BEGIN
 	from [gd_esquema].[Maestra]
 END
 GO
+
+
+
 ----crea un store procedure de la tabla Factura
 CREATE PROCEDURE SP_CargaTablaFactura
 AS
@@ -80,6 +99,8 @@ BEGIN
 	from [gd_esquema].[Maestra]
 END
 GO
+
+
 ----crea un store procedure de la tabla Cliente
 CREATE PROCEDURE SP_CargaTablaCliente
 AS
@@ -89,6 +110,7 @@ BEGIN
 	from [gd_esquema].[Maestra]
 END
 GO
+
 
 -- query para ejecutar SP
 --SP_CargaTablaNOMBREDELATABLA
