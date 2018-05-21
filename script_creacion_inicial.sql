@@ -102,7 +102,7 @@ CREATE TABLE BIG_DATA.Reserva (
 	codigoReserva numeric(18,0),
 	cantidadNoches numeric (18,0),
 	fecha_Reserva_Realizada datetime,
-	fecha_Rserva_Desde datetime,
+	fecha_Reserva_Desde datetime,
 	fecha_Reserva_Hasta datetime,
 	idTipo numeric (18,0),
 	idHotel numeric (18,0),
