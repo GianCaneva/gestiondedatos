@@ -76,6 +76,7 @@ CREATE TABLE BIG_DATA.Cliente (
 	mail nvarchar (255),
 	telefono numeric (18,0),
 	calle nvarchar (255),
+	numero_Calle numeric(18, 0),
 	piso numeric(18,0),
 	departamento nvarchar(50),
 	localidad nvarchar (255),
