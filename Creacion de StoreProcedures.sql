@@ -8,14 +8,15 @@ BEGIN
 END
 GO
 --crea un store procedure de la tabla Tipo
-CREATE PROCEDURE SP_CargaTablaTipo
+CREATE PROCEDURE [dbo].[SP_CargaTablaTipo]
 AS
 BEGIN
+SET IDENTITY_INSERT [BIG_DATA].[Tipo] ON
 	insert into [BIG_DATA].[Tipo] (idTipo,descripcion,precio)
 	select distinct Habitacion_Tipo_Codigo,Habitacion_Tipo_Descripcion,Habitacion_Tipo_Porcentual
 	from [gd_esquema].[Maestra]
+SET IDENTITY_INSERT [BIG_DATA].[Tipo] OFF
 END
-GO
 --crea un store procedure de la tabla Habitacion
 CREATE PROCEDURE SP_CargaTablaHabitacion
 AS
