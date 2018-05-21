@@ -180,6 +180,7 @@ CREATE TABLE BIG_DATA.Item (
 
 CREATE TABLE BIG_DATA.Consumible (
 	idConsumible numeric (18,0) IDENTITY (1,1) NOT NULL,
+	codigo numeric (18,0),
 	consumible varchar (255),
 	precio numeric (18,2),
 	PRIMARY KEY (idConsumible)
