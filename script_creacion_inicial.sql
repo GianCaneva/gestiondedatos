@@ -4,6 +4,7 @@ GO
 --Crea el Schema--
 
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'BIG_DATA')
+
 BEGIN
 	EXEC ('CREATE SCHEMA BIG_DATA AUTHORIZATION gdHotel2018')
 END
@@ -11,54 +12,54 @@ END
 --Creacion de tablas--
 
 CREATE TABLE BIG_DATA.Regimen (
-	idRegimen numeric (18,0) IDENTITY (1,1) NOT NULL,
-	nombre nvarchar (255),
-	descripcion nvarchar (255),
-	precio money,
-	estado char,
+	idRegimen NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
+	nombre NVARCHAR (255),
+	descripcion NVARCHAR (255),
+	precio MONEY,
+	estado BIT,
 	PRIMARY KEY (idRegimen)
 )
 
+
 CREATE TABLE BIG_DATA.Rol (
-	idRol numeric (18,0) IDENTITY (1,1) NOT NULL,
-	nombre nvarchar (255),
+	idRol NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
+	nombreRol NVARCHAR (255),
 	PRIMARY KEY (idRol)
 )
 
 CREATE TABLE BIG_DATA.Hotel (
-	idHotel numeric(18,0) IDENTITY (1,1) NOT NULL,
-	nombreHotel nvarchar (255),
-	mailHotel nvarchar (255),
-	telefonoHotel numeric (18,0),
-	direccionHotel nvarchar(255) ,
-	cantidadDeEstrellas numeric (18,0),
-	ciudadHotel nvarchar (255) ,
-	numeroCalle numeric (18,0),
-	paisHotel nvarchar (255) ,
-	idRegimen numeric (18,0),
-	fechaDeCreacion datetime,
-	recargaEstrella numeric (18,0)
+	idHotel NUMERIC(18,0) IDENTITY (1,1) NOT NULL,
+	nombreHotel NVARCHAR (255),
+	mailHotel NVARCHAR (255),
+	telefonoHotel NUMERIC (18,0),
+	direccionHotel NVARCHAR(255) ,
+	cantidadDeEstrellas NUMERIC (18,0),
+	ciudadHotel NVARCHAR (255) ,
+	numeroCalle NUMERIC (18,0),
+	paisHotel NVARCHAR (255) ,
+	fechaDeCreacion DATETIME,
+	recargaEstrella NUMERIC (18,0)
 	PRIMARY KEY(idHotel),
-	FOREIGN KEY (idRegimen) REFERENCES BIG_DATA.Regimen (idRegimen)
 )
 
 CREATE TABLE BIG_DATA.Usuario (
-	username nvarchar (255) NOT NULL,
-	password nvarchar (20),
-	idRol numeric (18,0),
+	username NVARCHAR (255) NOT NULL,
+	userpassword NVARCHAR (20),
+	idRol NUMERIC (18,0),
 	nombre nvarchar (255),
 	apellido nvarchar (255),
-	tipo_Documento nvarchar (5),
+	tipo_Documento NUMERIC (18,0),
 	documento numeric (18,0),
 	mail nvarchar (255),
 	telefono numeric (18,0),
 	direccion nvarchar (255),
 	fecha_Nacimiento datetime,
 	PRIMARY KEY (username),
-	FOREIGN KEY (idRol) REFERENCES BIG_DATA.Rol (idRol)
+	FOREIGN KEY (idRol) REFERENCES BIG_DATA.Rol (idRol),
+	FOREIGN KEY (tipo_documento) REFERENCES BIG_DATA.TipoDocumento (idDocumento)
 )
 
-CREATE TABLE BIG_DATA.Tipo (
+CREATE TABLE BIG_DATA.TipoHabitacion (
 	idTipo numeric (18,0) IDENTITY (1006,1) NOT NULL,
 	descripcion nvarchar (255),
 	precio numeric(18,2),
@@ -135,7 +136,7 @@ CREATE TABLE BIG_DATA.Nacionalidad (
 
 CREATE TABLE BIG_DATA.TipoDocumento (
 	idDocumento numeric (18,0) IDENTITY (1,1) NOT NULL,
-	tipo nvarchar (5),
+	nombreTipoDocumento nvarchar (5),
 	PRIMARY KEY (idDocumento)
 )
 
