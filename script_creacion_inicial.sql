@@ -77,7 +77,7 @@ CREATE TABLE BIG_DATA.TipoHabitacion (
 	idTipoHabitacion NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
 	descripcion NVARCHAR (255),
 	precio NUMERIC(18,2),
-	porcentual numeric(18, 2),
+	porcentual NUMERIC(18, 2),
 	PRIMARY KEY (idTipoHabitacion)
 )
 
