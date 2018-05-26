@@ -265,7 +265,6 @@ CREATE TABLE BIG_DATA.Cliente (
 	piso NUMERIC(18,0),
 	departamento NVARCHAR(50),
 	localidad NVARCHAR (255),
-	paisOrigen NUMERIC (18,0),
 	fecha_Nacimiento DATETIME
 	
 	PRIMARY KEY (idCliente),
