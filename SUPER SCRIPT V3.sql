@@ -59,8 +59,59 @@ PRINT @Sql
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
-ALTER TABLE BIG_DATA.CierreHotel drop constraint FK__CierreHot__idHot__0CC5D56F;ALTER TABLE BIG_DATA.Ciudad drop constraint FK__Ciudad__idPaisNa__6F357288;ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__tipo_Do__79B300FB;ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__naciona__7AA72534;ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__paisOri__7B9B496D;ALTER TABLE BIG_DATA.ConsumibleXEstadia drop constraint FK__Consumibl__idEst__249D5F00;ALTER TABLE BIG_DATA.ConsumibleXEstadia drop constraint FK__Consumibl__idCon__25918339;ALTER TABLE BIG_DATA.Estadia drop constraint FK__Estadia__idReser__0FA2421A;ALTER TABLE BIG_DATA.Factura drop constraint FK__Factura__idEstad__127EAEC5;ALTER TABLE BIG_DATA.FuncionXRol drop constraint FK__FuncionXR__idRol__20CCCE1C;ALTER TABLE BIG_DATA.FuncionXRol drop constraint FK__FuncionXR__idFun__21C0F255;ALTER TABLE BIG_DATA.Habitacion drop constraint FK__Habitacio__idTip__005FFE8A;ALTER TABLE BIG_DATA.Hotel drop constraint FK__Hotel__idCiudad__7306036C;ALTER TABLE BIG_DATA.Hotel drop constraint FK__Hotel__paisHotel__7211DF33;ALTER TABLE BIG_DATA.Item drop constraint FK__Item__idFactura__155B1B70;ALTER TABLE BIG_DATA.Item drop constraint FK__Item__idEstadia__164F3FA9;ALTER TABLE BIG_DATA.RegimenXHotel drop constraint FK__RegimenXH__idReg__192BAC54;ALTER TABLE BIG_DATA.RegimenXHotel drop constraint FK__RegimenXH__idHot__1A1FD08D;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idTipoH__0524B3A7;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idHotel__0618D7E0;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idRegim__070CFC19;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idHabit__08012052;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idClien__08F5448B;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idEstad__09E968C4;ALTER TABLE BIG_DATA.Usuario drop constraint FK__Usuario__idRol__75E27017;ALTER TABLE BIG_DATA.Usuario drop constraint FK__Usuario__tipo_Do__76D69450;ALTER TABLE BIG_DATA.UsuarioXHotel drop constraint FK__UsuarioXH__idHot__1CFC3D38;ALTER TABLE BIG_DATA.UsuarioXHotel drop constraint FK__UsuarioXH__usern__1DF06171;DROP TABLE BIG_DATA.[CierreHotel];DROP TABLE BIG_DATA.[Ciudad];DROP TABLE BIG_DATA.[Cliente];DROP TABLE BIG_DATA.[Consumible];DROP TABLE BIG_DATA.[ConsumibleXEstadia];DROP TABLE BIG_DATA.[Estadia];DROP TABLE BIG_DATA.[EstadoReserva];DROP TABLE BIG_DATA.[Factura];DROP TABLE BIG_DATA.[Funcion];DROP TABLE BIG_DATA.[FuncionXRol];DROP TABLE BIG_DATA.[Habitacion];DROP TABLE BIG_DATA.[Hotel];DROP TABLE BIG_DATA.[Item];DROP TABLE BIG_DATA.[PaisNacionalidad];DROP TABLE BIG_DATA.[Regimen];DROP TABLE BIG_DATA.[RegimenXHotel];DROP TABLE BIG_DATA.[Reserva];DROP TABLE BIG_DATA.[Rol];DROP TABLE BIG_DATA.[TipoDocumento];DROP TABLE BIG_DATA.[TipoHabitacion];DROP TABLE BIG_DATA.[Usuario];DROP TABLE BIG_DATA.[UsuarioXHotel];
-
+ALTER TABLE BIG_DATA.CierreHotel drop constraint FK__CierreHot__idHot__0CC5D56F;
+ALTER TABLE BIG_DATA.Ciudad drop constraint FK__Ciudad__idPaisNa__6F357288;
+ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__tipo_Do__79B300FB;
+ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__naciona__7AA72534;
+ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__paisOri__7B9B496D;
+ALTER TABLE BIG_DATA.ConsumibleXEstadia drop constraint FK__Consumibl__idEst__249D5F00;
+ALTER TABLE BIG_DATA.ConsumibleXEstadia drop constraint FK__Consumibl__idCon__25918339;
+ALTER TABLE BIG_DATA.Estadia drop constraint FK__Estadia__idReser__0FA2421A;
+ALTER TABLE BIG_DATA.Factura drop constraint FK__Factura__idEstad__127EAEC5;
+ALTER TABLE BIG_DATA.FuncionXRol drop constraint FK__FuncionXR__idRol__20CCCE1C;
+ALTER TABLE BIG_DATA.FuncionXRol drop constraint FK__FuncionXR__idFun__21C0F255;
+ALTER TABLE BIG_DATA.Habitacion drop constraint FK__Habitacio__idTip__005FFE8A;
+ALTER TABLE BIG_DATA.Hotel drop constraint FK__Hotel__idCiudad__7306036C;
+ALTER TABLE BIG_DATA.Hotel drop constraint FK__Hotel__paisHotel__7211DF33;
+ALTER TABLE BIG_DATA.Item drop constraint FK__Item__idFactura__155B1B70;
+ALTER TABLE BIG_DATA.Item drop constraint FK__Item__idEstadia__164F3FA9;
+ALTER TABLE BIG_DATA.RegimenXHotel drop constraint FK__RegimenXH__idReg__192BAC54;
+ALTER TABLE BIG_DATA.RegimenXHotel drop constraint FK__RegimenXH__idHot__1A1FD08D;
+ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idTipoH__0524B3A7;
+ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idHotel__0618D7E0;
+ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idRegim__070CFC19;
+ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idHabit__08012052;
+ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idClien__08F5448B;
+ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idEstad__09E968C4;
+ALTER TABLE BIG_DATA.Usuario drop constraint FK__Usuario__idRol__75E27017;
+ALTER TABLE BIG_DATA.Usuario drop constraint FK__Usuario__tipo_Do__76D69450;
+ALTER TABLE BIG_DATA.UsuarioXHotel drop constraint FK__UsuarioXH__idHot__1CFC3D38;
+ALTER TABLE BIG_DATA.UsuarioXHotel drop constraint FK__UsuarioXH__usern__1DF06171;
+DROP TABLE BIG_DATA.[CierreHotel];
+DROP TABLE BIG_DATA.[Ciudad];
+DROP TABLE BIG_DATA.[Cliente];
+DROP TABLE BIG_DATA.[Consumible];
+DROP TABLE BIG_DATA.[ConsumibleXEstadia];
+DROP TABLE BIG_DATA.[Estadia];
+DROP TABLE BIG_DATA.[EstadoReserva];
+DROP TABLE BIG_DATA.[Factura];
+DROP TABLE BIG_DATA.[Funcion];
+DROP TABLE BIG_DATA.[FuncionXRol];
+DROP TABLE BIG_DATA.[Habitacion];
+DROP TABLE BIG_DATA.[Hotel];
+DROP TABLE BIG_DATA.[Item];
+DROP TABLE BIG_DATA.[PaisNacionalidad];
+DROP TABLE BIG_DATA.[Regimen];
+DROP TABLE BIG_DATA.[RegimenXHotel];
+DROP TABLE BIG_DATA.[Reserva];
+DROP TABLE BIG_DATA.[Rol];
+DROP TABLE BIG_DATA.[TipoDocumento];
+DROP TABLE BIG_DATA.[TipoHabitacion];
+DROP TABLE BIG_DATA.[Usuario];
+DROP TABLE BIG_DATA.[UsuarioXHotel];
+
+
+
 
 
 
@@ -123,6 +174,7 @@ CREATE TABLE BIG_DATA.TipoDocumento (
 CREATE TABLE BIG_DATA.Rol (
 	idRol NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
 	rolDesc NVARCHAR (255),
+	estadoRol bit
 	
 	PRIMARY KEY (idRol)
 )
@@ -180,17 +232,18 @@ CREATE TABLE BIG_DATA.Hotel (
 )
 
 CREATE TABLE BIG_DATA.Usuario (
-	username NVARCHAR (255) NOT NULL,
+	username NVARCHAR (255) NOT NULL UNIQUE,
 	userpassword NVARCHAR (20),
 	idRol NUMERIC (18,0),
 	nombre NVARCHAR (255),
 	apellido NVARCHAR (255),
 	tipo_Documento NUMERIC (18,0),
 	documento NUMERIC (18,0),
-	mail NVARCHAR (255),
+	mail NVARCHAR (255) UNIQUE,
 	telefono NUMERIC (18,0),
 	direccion NVARCHAR (255),
 	fecha_Nacimiento DATETIME,
+	estadoUsuario bit,
 	
 	PRIMARY KEY (username),
 	FOREIGN KEY (idRol) REFERENCES BIG_DATA.Rol (idRol),
@@ -240,7 +293,7 @@ CREATE TABLE BIG_DATA.Habitacion (
 
 CREATE TABLE BIG_DATA.Reserva (
 	idReserva NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
-	codigoReserva NUMERIC(18,0) NOT NULL,
+	codigoReserva NUMERIC(18,0) IDENTITY (1,1)NOT NULL,
 	cantidadNoches NUMERIC (18,0),
 	fecha_Reserva_Realizada DATETIME DEFAULT (getdate()),
 	fecha_Reserva_Desde DATETIME NOT NULL,
@@ -531,3 +584,216 @@ FROM [BIG_DATA].[Consumible] c,[BIG_DATA].[Estadia] e,[gd_esquema].[Maestra] m,B
 WHERE (m.Consumible_Codigo=c.idConsumible) AND (m.Reserva_Codigo = r.codigoReserva  and
 e.idReserva = r.idReserva and m.Factura_Nro IS NOT NULL)
 
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------CREACION STORED PROCEDURES----------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+--Rol
+
+CREATE PROCEDURE BIG_DATA.crear_rol
+	@nombreRol nvarchar(255),
+	@funcionalidad1 nvarchar(255),
+	@funcionalidad2 nvarchar(255),
+	@funcionalidad3 nvarchar(255),
+	@funcionalidad4 nvarchar(255),
+	@funcionalidad5 nvarchar(255),
+	@funcionalidad6 nvarchar(255),
+	@funcionalidad7 nvarchar(255),
+	@funcionalidad8 nvarchar(255),
+	@funcionalidad9 nvarchar(255),
+	@funcionalidad10 nvarchar(255),
+	@funcionalidad11 nvarchar(255),
+	@funcionalidad12 nvarchar(255),
+	@funcionalidad13 nvarchar(255),
+	@estado bit
+AS
+BEGIN
+	DECLARE @idRol numeric (18,0)
+	IF NOT EXISTS (SELECT * FROM BIG_DATA.Rol WHERE rolDesc = @nombreRol)
+BEGIN
+	INSERT INTO BIG_DATA.Rol (rolDesc,estadoRol) VALUES (@nombreRol,@estado)
+END
+ELSE
+BEGIN
+	RAISERROR('Ya existe el rol.',16,1)
+END
+	SET @idRol = SCOPE_IDENTITY();
+	INSERT INTO BIG_DATA.FuncionXRol (idRol,idFuncion) VALUES (@idRol,@funcionalidad1)
+/*Se podria seguir asi pero algunas van a ser nulas y va a tirar error.. y lo que tmb estaba pensando 
+es que capaz al declarar 13 funcionalidades.. capaz espera las 13 y tira error si lellegan menos*/
+END
+
+
+--Quitar funcionalidad Rol
+
+CREATE PROCEDURE BIG_DATA.quitar_funcionalidad
+	@nombreRol nvarchar(255),
+	@funcionalidad nvarchar(255)
+AS
+BEGIN
+	DECLARE @idRol numeric(18,0) = (select idRol from BIG_DATA.Rol r where r.rolDesc = @nombreRol)
+	DECLARE @idFuncion numeric (18,0) = (select idFuncion from BIG_DATA.Funcion f where f.funcionDesc = @funcionalidad)
+	
+	DELETE
+	FROM BIG_DATA.FuncionXRol
+	where idRol = @idRol AND idFuncion = @idFuncion
+END
+
+--Agregar funcionalidad a Rol
+CREATE PROCEDURE BIG_DATA.agregar_funcionalidad
+	@nombreRol nvarchar(255),
+	@funcionalidad nvarchar(255)
+
+AS
+BEGIN
+	DECLARE @idRol numeric(18,0) = (select idRol from BIG_DATA.Rol r where r.rolDesc = @nombreRol)
+	DECLARE @idFuncion numeric (18,0) = (select idFuncion from BIG_DATA.Funcion f where f.funcionDesc = @funcionalidad)
+
+INSERT INTO BIG_DATA.FuncionXRol VALUES (@idRol,@idFuncion)
+
+END
+
+
+--Eliminacion de Rol
+
+CREATE PROCEDURE BIG_DATA.eliminar_rol
+	@nombreRol nvarchar(255)
+
+AS
+BEGIN
+	DECLARE @idRol numeric(18,0) = (select idRol from BIG_DATA.Rol r where r.rolDesc = @nombreRol)
+
+	UPDATE BIG_DATA.Rol
+	SET estadoRol = 0
+	where idRol = @idRol
+END
+
+--Habilitar Rol
+
+CREATE PROCEDURE BIG_DATA.habilitar_rol
+	@nombreRol nvarchar(255)
+
+AS
+BEGIN
+	DECLARE @idRol numeric(18,0) = (select idRol from BIG_DATA.Rol r where r.rolDesc = @nombreRol)
+
+	UPDATE BIG_DATA.Rol
+	SET estadoRol = 1
+	where idRol = @idRol
+END
+
+--Mostrar roles para filtrado
+
+CREATE PROCEDURE get_roles --ACA QUIZAS ALLA QUE PONER UNA VARIABLE TIPO TABLA COMO OUTPUT PARA Q FUNCIONE QUIZAS.. AUNQUE CAPAZ ASI FUNCIONA PARA EL C#
+AS
+BEGIN	
+	select rolDesc from BIG_DATA.Rol
+END
+
+--Crear Administrador o recepcionista
+
+CREATE PROCEDURE BIG_DATA.crear_usuario
+	@Username nvarchar(255),
+	@Password nvarchar(255),
+	@Rol nvarchar(255),
+	@Nombre nvarchar(255),
+	@Apellido nvarchar(255),
+	@TipoDocumento nvarchar(255), 
+	@Nrodocumento numeric (18,0),
+	@Mail nvarchar(255),
+	@Teléfono numeric (18,0),
+	@Dirección nvarchar (255),
+	@FechaNacimiento datetime,
+	@Hotel nvarchar(255) --ACA HAY QUE VER SI MANEJAMOS NOMBRE DE HOTEL (POR AHORA NO TENEMOS NIGUNO) O BUSCAMOS POR VARIOS CAMPOS
+	--DEPENDIENDO QUE USEMOS HAY QUE AGREGAR UN SEGUNDO INSERT COMO HICE EN EL PRIMER SP (despues del end catch), para agrgar a la tabla intermedia, no termina aca.
+AS
+BEGIN
+	DECLARE @passwordEncriptada nvarchar(255) = cast((SELECT HASHBYTES('SHA2_256',@Password)) AS nvarchar(255))
+	BEGIN TRY
+			INSERT INTO BIG_DATA.Usuario (username,userpassword,idRol,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento)
+	VALUES (@Username,@passwordEncriptada,@Rol,@Nombre,@Apellido,@TipoDocumento,@Nrodocumento,@Mail,@Teléfono,@Dirección,@FechaNacimiento)
+
+	END TRY
+	
+	BEGIN CATCH
+			RAISERROR('Campo invalido',16,1) --POR SI TIRA ERROR DE USERNAME O DE MAIL Q TIENEN Q SER UNICOS
+	END CATCH
+END
+
+--Crear Guest/Cliente
+
+CREATE PROCEDURE BIG_DATA.crear_usuario_guest
+	@Username nvarchar(255),
+	@Password nvarchar(255),
+	@Rol nvarchar(255),
+	@Nombre nvarchar(255),
+	@Apellido nvarchar(255),
+	@TipoDocumento nvarchar(255), 
+	@Nrodocumento numeric (18,0),
+	@Mail nvarchar(255),
+	@Teléfono numeric (18,0),
+	@Dirección nvarchar (255),
+	@FechaNacimiento datetime
+AS
+BEGIN
+	DECLARE @passwordEncriptada nvarchar(255) = cast((SELECT HASHBYTES('SHA2_256',@Password)) AS nvarchar(255))
+	BEGIN TRY
+			INSERT INTO BIG_DATA.Usuario (username,userpassword,idRol,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento)
+	VALUES (@Username,@passwordEncriptada,@Rol,@Nombre,@Apellido,@TipoDocumento,@Nrodocumento,@Mail,@Teléfono,@Dirección,@FechaNacimiento)
+
+	END TRY
+	
+	BEGIN CATCH
+			RAISERROR('Campo invalido',16,1) --POR SI TIRA ERROR DE USERNAME O DE MAIL Q TIENEN Q SER UNICOS
+	END CATCH
+END
+
+
+
+--Modificar Password Usuario
+
+CREATE PROCEDURE BIG_DATA.modificar_password
+
+	@username nvarchar(255),
+	@NuevoPassword nvarchar(255)
+AS
+BEGIN
+	DECLARE @NuevoPasswordEncriptado nvarchar(255) = cast((SELECT HASHBYTES('SHA2_256',@NuevoPassword)) AS nvarchar(255))
+	UPDATE BIG_DATA.Usuario
+	SET userpassword = @NuevoPasswordEncriptado
+	where username = @username
+
+END
+
+--Baja Usuario
+
+CREATE PROCEDURE BIG_DATA.baja_usuario
+
+	@username nvarchar(255)
+
+AS
+BEGIN
+
+	UPDATE BIG_DATA.Usuario
+	SET estadoUsuario = 0
+	WHERE username = @username
+
+END
+
+--Habilitar Usuario
+
+CREATE PROCEDURE BIG_DATA.alta_usuario
+
+	@username nvarchar(255)
+
+AS
+BEGIN
+
+	UPDATE BIG_DATA.Usuario
+	SET estadoUsuario = 1
+	WHERE username = @username
+
+END

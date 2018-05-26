@@ -1,0 +1,36 @@
+Crear Rol
+Modificar Rol
+Eliminar Rol
+Login de Usuario (por cada usuario)
+Crear Usuario
+Modificar Usuario (modificar password,habilitacion)
+Eliminar Usuario
+Crear Cliente (Huesped)
+Modificar Cliente(habilitacion)
+Crear Hotel
+Modificar Hotel (Todos los valores)
+Baja Hotel
+Crear Habitacion
+Modificar Habitacion (Todos los valores menos el tipo)
+Baja Habitacion
+Generar Reserva
+Modificar Reserva
+Cancelar Reserva
+Realizar Checkin
+Realizar Checkout
+Registrar Consumible de estadia (con posible modificacion antes de temrinarlo)
+Generar factura
+Listado estadistico (a nivel trimestral):
+			TOP 5 de hoteles con mayor cantidad de reservas canceladas
+			TOP 5 de hoteles con mayor cantidad de consumibles facturados
+			TOP 5 de hoteles con mayor cantidad de dias fuera de servicio
+			TOP 5 de habitaciones con mayor cantidad de días y veces que fueron ocupadas,
+informando a demás a que hotel perteneces.
+			TOP 5 de cliente con mayor cantidad de puntos, donde cada $20 en estadías vale 1
+puntos y cada $10 de consumibles es 1 punto, de la sumatoria de todas las
+facturaciones que haya tenido dentro de un periodo independientemente
+del Hotel. Tener en cuenta que la facturación siempre es a quien haya
+realizado la reserva.
+
+
+
