@@ -1,0 +1,2 @@
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP Año pasado\PagoAgilGDD\GestionHotelera\bin\Debug\GestionHotelera.exe.config
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\GestionHotelera\bin\Debug\GestionHotelera.exe.config
