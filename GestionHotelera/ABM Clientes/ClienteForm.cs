@@ -20,7 +20,7 @@ namespace GestionHotelera.ABM_Clientes
         private void bntClienteAlta_Click(object sender, EventArgs e)
         {
             this.Hide();
-            new AgregarCliente().display;
+            new AltaCliente().ShowDialog();
             this.Close();
         }
 

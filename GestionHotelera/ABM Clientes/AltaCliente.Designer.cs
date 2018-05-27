@@ -366,8 +366,9 @@
             this.btnAltaClienteVolver.Name = "btnAltaClienteVolver";
             this.btnAltaClienteVolver.Size = new System.Drawing.Size(75, 23);
             this.btnAltaClienteVolver.TabIndex = 18;
-            this.btnAltaClienteVolver.Text = "<";
+            this.btnAltaClienteVolver.Text = "< Volver";
             this.btnAltaClienteVolver.UseVisualStyleBackColor = true;
+            this.btnAltaClienteVolver.Click += new System.EventHandler(this.btnAltaClienteVolver_Click);
             // 
             // btnAltaClienteHome
             // 

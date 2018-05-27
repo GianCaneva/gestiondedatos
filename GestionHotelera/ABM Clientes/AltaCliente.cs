@@ -38,7 +38,6 @@ namespace GestionHotelera.ABM_Clientes
         {
             String nombre = txtAltaClienteNombre.Text;
             String apellido = txtAltaClienteApellido.Text;
-            String fechaDeNacimiento = txtAltaClienteFechaDeNacimiento.Text;
             DateTime fechaDeNacimiento;
             DateTime.TryParse(txtAltaClienteFechaDeNacimiento.Text , out fechaDeNacimiento);
             String nacionalidad = cboAltaClienteNacionalidad.Text;
@@ -96,8 +95,20 @@ namespace GestionHotelera.ABM_Clientes
 
         private void btnAltaClienteHome_Click(object sender, EventArgs e)
         {
+            VolverAlMenuPrincial();
+        }
+
+        private void btnAltaClienteVolver_Click(object sender, EventArgs e)
+        {
             this.Hide();
             new ClienteForm().ShowDialog();
+            this.Close();
+        }
+
+        private void VolverAlMenuPrincial()
+        {
+            this.Hide();
+            new MenuPrincipal().ShowDialog();
             this.Close();
         }
     }
