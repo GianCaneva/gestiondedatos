@@ -59,7 +59,7 @@ PRINT @Sql
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
-ALTER TABLE BIG_DATA.CierreHotel drop constraint FK__CierreHot__idHot__3BEAD8AC;ALTER TABLE BIG_DATA.Ciudad drop constraint FK__Ciudad__idPaisNa__1E5A75C5;ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__tipo_Do__28D80438;ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__naciona__29CC2871;ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__paisOri__2AC04CAA;ALTER TABLE BIG_DATA.ConsumibleXEstadia drop constraint FK__Consumibl__idEst__53C2623D;ALTER TABLE BIG_DATA.ConsumibleXEstadia drop constraint FK__Consumibl__idCon__54B68676;ALTER TABLE BIG_DATA.Estadia drop constraint FK__Estadia__idReser__3EC74557;ALTER TABLE BIG_DATA.Factura drop constraint FK__Factura__idEstad__41A3B202;ALTER TABLE BIG_DATA.FuncionXRol drop constraint FK__FuncionXR__idRol__4FF1D159;ALTER TABLE BIG_DATA.FuncionXRol drop constraint FK__FuncionXR__idFun__50E5F592;ALTER TABLE BIG_DATA.Habitacion drop constraint FK__Habitacio__idTip__2F8501C7;ALTER TABLE BIG_DATA.Hotel drop constraint FK__Hotel__idCiudad__222B06A9;ALTER TABLE BIG_DATA.Hotel drop constraint FK__Hotel__paisHotel__2136E270;ALTER TABLE BIG_DATA.Item drop constraint FK__Item__idFactura__44801EAD;ALTER TABLE BIG_DATA.Item drop constraint FK__Item__idEstadia__457442E6;ALTER TABLE BIG_DATA.RegimenXHotel drop constraint FK__RegimenXH__idReg__4850AF91;ALTER TABLE BIG_DATA.RegimenXHotel drop constraint FK__RegimenXH__idHot__4944D3CA;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idTipoH__3449B6E4;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idHotel__353DDB1D;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idRegim__3631FF56;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idHabit__3726238F;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idClien__381A47C8;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idEstad__390E6C01;ALTER TABLE BIG_DATA.Usuario drop constraint FK__Usuario__idRol__25077354;ALTER TABLE BIG_DATA.Usuario drop constraint FK__Usuario__tipo_Do__25FB978D;ALTER TABLE BIG_DATA.UsuarioXHotel drop constraint FK__UsuarioXH__idHot__4C214075;ALTER TABLE BIG_DATA.UsuarioXHotel drop constraint FK__UsuarioXH__usern__4D1564AE;DROP TABLE BIG_DATA.[CierreHotel];DROP TABLE BIG_DATA.[Ciudad];DROP TABLE BIG_DATA.[Cliente];DROP TABLE BIG_DATA.[Consumible];DROP TABLE BIG_DATA.[ConsumibleXEstadia];DROP TABLE BIG_DATA.[Estadia];DROP TABLE BIG_DATA.[EstadoReserva];DROP TABLE BIG_DATA.[Factura];DROP TABLE BIG_DATA.[Funcion];DROP TABLE BIG_DATA.[FuncionXRol];DROP TABLE BIG_DATA.[Habitacion];DROP TABLE BIG_DATA.[Hotel];DROP TABLE BIG_DATA.[Item];DROP TABLE BIG_DATA.[PaisNacionalidad];DROP TABLE BIG_DATA.[Regimen];DROP TABLE BIG_DATA.[RegimenXHotel];DROP TABLE BIG_DATA.[Reserva];DROP TABLE BIG_DATA.[Rol];DROP TABLE BIG_DATA.[TipoDocumento];DROP TABLE BIG_DATA.[TipoHabitacion];DROP TABLE BIG_DATA.[Usuario];DROP TABLE BIG_DATA.[UsuarioXHotel];
+ALTER TABLE BIG_DATA.CierreHotel drop constraint FK__CierreHot__idHot__1EAF7B80;ALTER TABLE BIG_DATA.Ciudad drop constraint FK__Ciudad__idPaisNa__002AF460;ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__tipo_Do__0B9CA70C;ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__naciona__0C90CB45;ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__paisOri__0D84EF7E;ALTER TABLE BIG_DATA.ConsumibleXEstadia drop constraint FK__Consumibl__idEst__36870511;ALTER TABLE BIG_DATA.ConsumibleXEstadia drop constraint FK__Consumibl__idCon__377B294A;ALTER TABLE BIG_DATA.Estadia drop constraint FK__Estadia__idReser__218BE82B;ALTER TABLE BIG_DATA.Factura drop constraint FK__Factura__idClien__246854D6;ALTER TABLE BIG_DATA.FuncionXRol drop constraint FK__FuncionXR__idRol__32B6742D;ALTER TABLE BIG_DATA.FuncionXRol drop constraint FK__FuncionXR__idFun__33AA9866;ALTER TABLE BIG_DATA.Habitacion drop constraint FK__Habitacio__idTip__1249A49B;ALTER TABLE BIG_DATA.Hotel drop constraint FK__Hotel__idCiudad__04EFA97D;ALTER TABLE BIG_DATA.Hotel drop constraint FK__Hotel__paisHotel__03FB8544;ALTER TABLE BIG_DATA.Item drop constraint FK__Item__idFactura__2744C181;ALTER TABLE BIG_DATA.Item drop constraint FK__Item__idEstadia__2838E5BA;ALTER TABLE BIG_DATA.RegimenXHotel drop constraint FK__RegimenXH__idReg__2B155265;ALTER TABLE BIG_DATA.RegimenXHotel drop constraint FK__RegimenXH__idHot__2C09769E;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idTipoH__170E59B8;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idHotel__18027DF1;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idRegim__18F6A22A;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idHabit__19EAC663;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idClien__1ADEEA9C;ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idEstad__1BD30ED5;ALTER TABLE BIG_DATA.Usuario drop constraint FK__Usuario__idRol__07CC1628;ALTER TABLE BIG_DATA.Usuario drop constraint FK__Usuario__tipo_Do__08C03A61;ALTER TABLE BIG_DATA.UsuarioXHotel drop constraint FK__UsuarioXH__idHot__2EE5E349;ALTER TABLE BIG_DATA.UsuarioXHotel drop constraint FK__UsuarioXH__usern__2FDA0782;DROP TABLE BIG_DATA.[CierreHotel];DROP TABLE BIG_DATA.[Ciudad];DROP TABLE BIG_DATA.[Cliente];DROP TABLE BIG_DATA.[Consumible];DROP TABLE BIG_DATA.[ConsumibleXEstadia];DROP TABLE BIG_DATA.[Estadia];DROP TABLE BIG_DATA.[EstadoReserva];DROP TABLE BIG_DATA.[Factura];DROP TABLE BIG_DATA.[Funcion];DROP TABLE BIG_DATA.[FuncionXRol];DROP TABLE BIG_DATA.[Habitacion];DROP TABLE BIG_DATA.[Hotel];DROP TABLE BIG_DATA.[Item];DROP TABLE BIG_DATA.[PaisNacionalidad];DROP TABLE BIG_DATA.[Regimen];DROP TABLE BIG_DATA.[RegimenXHotel];DROP TABLE BIG_DATA.[Reserva];DROP TABLE BIG_DATA.[Rol];DROP TABLE BIG_DATA.[TipoDocumento];DROP TABLE BIG_DATA.[TipoHabitacion];DROP TABLE BIG_DATA.[Usuario];DROP TABLE BIG_DATA.[UsuarioXHotel];
 
 
 
@@ -442,9 +442,6 @@ INSERT INTO [BIG_DATA].[Hotel] (idCiudad,direccionHotel,numeroCalle,cantidadDeEs
 			AND Hotel_Ciudad = ciudadNombre
 	GROUP BY idCiudad,Hotel_Calle,Hotel_Nro_Calle,Hotel_CantEstrella,Hotel_Recarga_Estrella,idPaisNacionalidad
 
-
-	select idPaisNacionalidad from BIG_DATA.Ciudad,[gd_esquema].[Maestra] where Hotel_CIUDAD = ciudadNombre
-
 --Migracion Tabla Cliente
 	INSERT INTO [BIG_DATA].[Cliente] (documento,tipo_Documento,apellido,nombre,fecha_Nacimiento,mail,calle,numero_Calle,piso,departamento,nacionalidad)
 	SELECT DISTINCT Cliente_Pasaporte_Nro,t.idDocumento,Cliente_Apellido,Cliente_Nombre,Cliente_Fecha_Nac,Cliente_Mail,Cliente_Dom_Calle,Cliente_Nro_Calle,Cliente_Piso,Cliente_Depto,n.idPaisNacionalidad
@@ -472,7 +469,7 @@ INSERT INTO [BIG_DATA].[Hotel] (idCiudad,direccionHotel,numeroCalle,cantidadDeEs
 	SELECT distinct m.Reserva_Codigo,m.Reserva_Fecha_Inicio,m.Reserva_Cant_Noches,t.idTipoHabitacion,h.idHotel,r.idRegimen,hab.idHabitacion,cl.idCliente,"er.idEstadoReserva"=
 	(
 	CASE WHEN m.Reserva_Fecha_Inicio < GETDATE()
-		THEN  6
+		THEN 6
 	ELSE 1
 	END
 	)
@@ -491,14 +488,13 @@ INSERT into [BIG_DATA].[Estadia](fecha_Check_In,cantidadDias, idReserva,fecha_Ch
 	WHERE M.Reserva_Codigo=R.codigoReserva AND 
 	(Hotel_Ciudad=c.ciudadNombre AND Hotel_Calle=direccionHotel AND Hotel_Nro_Calle=numeroCalle) AND [Estadia_Fecha_Inicio] IS NOT NULL AND m.Reserva_Codigo IS NOT NULL
 	
+	
 
 --Migracion Tabla Factura	
-INSERT INTO [BIG_DATA].[Factura](numero,fecha,total,idEstadia)
-SELECT DISTINCT m.Factura_Nro,m.Factura_Fecha,m.Factura_Total,e.idEstadia
-FROM [gd_esquema].[Maestra] m, BIG_DATA.Estadia e, BIG_DATA.Reserva r
-WHERE m.Reserva_Codigo = r.codigoReserva  and
-e.idReserva = r.idReserva and m.Factura_Nro IS NOT NULL
---pz9exk
+INSERT INTO [BIG_DATA].[Factura](numero,fecha,total,idCliente)
+SELECT DISTINCT m.Factura_Nro,m.Factura_Fecha,m.Factura_Total,c.idCliente
+FROM [gd_esquema].[Maestra] m,BIG_DATA.Reserva r, BIG_DATA.Cliente c,BIG_DATA.Hotel h,BIG_DATA.Ciudad cd
+WHERE m.Reserva_Codigo = r.codigoReserva and r.idHotel=h.idHotel and (Hotel_Ciudad=cd.ciudadNombre AND m.Hotel_Calle=h.direccionHotel AND m.Hotel_Nro_Calle=h.numeroCalle) and m.Factura_Nro IS NOT NULL and c.nombre=m.Cliente_Nombre and c.apellido=m.Cliente_Apellido and c.documento=m.Cliente_Pasaporte_Nro
 
 
 --Migracion Tabla Item
