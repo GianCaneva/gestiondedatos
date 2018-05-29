@@ -206,7 +206,8 @@ CREATE TABLE BIG_DATA.Cliente (
 	departamento NVARCHAR(50),
 	localidad NVARCHAR (255),
 	paisOrigen NUMERIC (18,0),
-	fecha_Nacimiento DATETIME
+	fecha_Nacimiento DATETIME,
+	estadoCliente BIT
 	
 	PRIMARY KEY (idCliente),
 	FOREIGN KEY (tipo_documento) REFERENCES BIG_DATA.TipoDocumento (idDocumento),
@@ -329,6 +330,16 @@ CREATE TABLE BIG_DATA.FuncionXRol (
 	PRIMARY KEY (idFuncionRol),
 	FOREIGN KEY (idRol) REFERENCES BIG_DATA.Rol (idRol),
 	FOREIGN KEY (idFuncion) REFERENCES BIG_DATA.Funcion (idFuncion)
+)
+
+CREATE TABLE BIG_DATA.UsuarioXRol (
+	idUsuarioXRol NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
+	username NVARCHAR(255),
+	idRol NUMERIC (18,0),
+
+	PRIMARY KEY (idUsuarioXRol),
+	FOREIGN KEY (username) REFERENCES BIG_DATA.Usuario (username),
+	FOREIGN KEY (idRol) REFERENCES BIG_DATA.Rol (idRol)
 )
 
 CREATE TABLE BIG_DATA.ConsumibleXEstadia (
@@ -854,4 +865,259 @@ END
 
 GO
 
+--Crear Cliente
 
+CREATE PROCEDURE BIG_DATA.crear_cliente
+
+	@nombre nvarchar(255),
+	@apellido nvarchar(255),
+	@tipoDocumento nvarchar(255),
+	@numeroDocumento numeric (18,0),
+	@mail nvarchar(255),
+	@telefono numeric(18,0),
+	@calle nvarchar(255),
+	@nroCalle numeric(18,0),
+	@departamento numeric(18,0),
+	@piso numeric(18,0),
+	@localidad nvarchar(255),
+	@paisOrigen nvarchar(255),
+	@fechaNacimiento datetime,
+	@nacionalidad nvarchar(255)
+
+AS
+BEGIN
+	DECLARE @existe_cliente INT
+
+	SELECT @existe_cliente = COUNT(*)
+	FROM BIG_DATA.Cliente
+	WHERE tipo_Documento = @tipoDocumento AND documento = @numeroDocumento
+
+
+	IF @existe_cliente = 1
+		BEGIN
+			RAISERROR('El cliente ya existe.', 16, 1)
+			RETURN
+		END
+
+	BEGIN TRY
+
+		
+		INSERT INTO BIG_DATA.Cliente (nombre,apellido,tipo_Documento,documento,nacionalidad,
+		mail,telefono,calle,numero_Calle,piso,departamento,localidad,paisOrigen,fecha_Nacimiento)
+	
+		VALUES (@nombre,@apellido,@tipoDocumento,@numeroDocumento,@nacionalidad,@mail,@telefono,
+		@calle,@nroCalle,@piso,@departamento,@localidad,@paisOrigen,@fechaNacimiento) 
+	END TRY
+	
+	BEGIN CATCH
+			RAISERROR('Campo invalido',16,1) --DE MAIL Q TIENE Q SER UNICO
+	END CATCH
+
+END
+GO
+
+--Modificar Nombre
+CREATE PROCEDURE BIG_DATA.modificar_nombre_Cliente
+	@nombre nvarchar(255),
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET nombre = @nombre
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+END
+GO
+--Modificar Apellido
+CREATE PROCEDURE BIG_DATA.modificar_apellido_Cliente
+	@apellido nvarchar(255),
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET apellido = @apellido
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+
+END
+GO
+--Modificar Tipo de identificacion
+CREATE PROCEDURE BIG_DATA.modificar_tipoDocumento_Cliente
+	@tipoDocumentoNuevo nvarchar(255),
+	@tipoDocumentoViejo nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET tipo_Documento = @tipoDocumentoNuevo
+	where tipo_Documento = @tipoDocumentoViejo AND documento = @documento
+
+END
+GO
+
+--Modificar Numero de documento
+CREATE PROCEDURE BIG_DATA.modificar_numeroDocumento_Cliente
+	@documentoNuevo numeric(18,0),
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET documento = @documentoNuevo
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+
+END
+GO
+
+--Modificar Telefono
+CREATE PROCEDURE BIG_DATA.modificar_telefono_Cliente
+	@telefono numeric(18,0),
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+
+AS
+BEGIN
+	
+	UPDATE BIG_DATA.Cliente
+	SET telefono = @telefono
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+
+END
+GO
+
+--Modificar Calle
+CREATE PROCEDURE BIG_DATA.modificar_calle_Cliente
+	@calle nvarchar(255),
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	
+	UPDATE BIG_DATA.Cliente
+	SET calle = @calle
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+
+END
+GO
+
+--Modificar NroCalle
+CREATE PROCEDURE BIG_DATA.modificar_numeroCalle_Cliente
+	@numero nvarchar(255),
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET numero_Calle = @numero
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+
+END
+GO
+
+--Modificar dpto
+CREATE PROCEDURE BIG_DATA.modificar_departamento_Cliente
+	@dpto numeric(18,0),
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET departamento = @dpto
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+
+END
+GO
+
+--Modificar piso
+CREATE PROCEDURE BIG_DATA.modificar_piso_Cliente
+	@piso numeric (18,0),
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET piso = @piso
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+
+END
+GO
+
+--Modificar localidad
+CREATE PROCEDURE BIG_DATA.modificar_localidad_Cliente
+	@localidad nvarchar(255),
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET localidad = @localidad
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+
+END
+GO
+
+
+--Modificar pais de origen
+CREATE PROCEDURE BIG_DATA.modificar_paisOrigen_Cliente
+	@pais nvarchar(255),
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET paisOrigen = @pais
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+
+END
+GO
+
+--Modificar fecha de nacimiento
+CREATE PROCEDURE BIG_DATA.modificar_nacimiento_Cliente
+	@nacimiento datetime,
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET fecha_Nacimiento = @nacimiento
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+
+END
+GO
+
+--Modificar nacionalidad
+CREATE PROCEDURE BIG_DATA.modificar_nacionalidad_Cliente
+	@nacionalidad nvarchar(255),
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0)
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET nacionalidad = @nacionalidad
+	where tipo_Documento = @tipoDocumento AND documento = @documento
+
+END
+GO
+
+--habilitacion Cliente
+
+CREATE PROCEDURE BIG_DATA.habilitacion_cliente
+	
+	@tipoDocumento nvarchar(255),
+	@documento numeric(18,0),
+	@estado bit
+
+AS
+BEGIN
+	UPDATE BIG_DATA.Cliente
+	SET estadoCliente = @estado
+	WHERE tipo_Documento = @tipoDocumento AND documento = @documento
+END
+GO
+
+--FALTA EL SELECCIONAR UN CLIENTE
+
+
+
+
+		
