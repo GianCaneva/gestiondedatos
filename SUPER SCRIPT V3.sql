@@ -186,7 +186,6 @@ CREATE TABLE BIG_DATA.Usuario (
 	user_intentos_fallidos INT
 	
 	PRIMARY KEY (username),
-	FOREIGN KEY (idRol) REFERENCES BIG_DATA.Rol (idRol),
 	FOREIGN KEY (tipo_documento) REFERENCES BIG_DATA.TipoDocumento (idDocumento)
 )
 
@@ -329,6 +328,16 @@ CREATE TABLE BIG_DATA.FuncionXRol (
 	PRIMARY KEY (idFuncionRol),
 	FOREIGN KEY (idRol) REFERENCES BIG_DATA.Rol (idRol),
 	FOREIGN KEY (idFuncion) REFERENCES BIG_DATA.Funcion (idFuncion)
+)
+
+CREATE TABLE BIG_DATA.UsuarioXRol (
+	idUsuarioXRol NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
+	username NVARCHAR(255),
+	idRol NUMERIC (18,0),
+
+	PRIMARY KEY (idUsuarioXRol),
+	FOREIGN KEY (username) REFERENCES BIG_DATA.Usuario (username),
+	FOREIGN KEY (idRol) REFERENCES BIG_DATA.Rol (idRol)
 )
 
 CREATE TABLE BIG_DATA.ConsumibleXEstadia (
