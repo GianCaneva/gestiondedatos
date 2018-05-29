@@ -113,7 +113,8 @@ CREATE TABLE BIG_DATA.TipoDocumento (
 CREATE TABLE BIG_DATA.Rol (
 	idRol NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
 	rolDesc NVARCHAR (255),
-	
+	estadoRol BIT,
+
 	PRIMARY KEY (idRol)
 )
 
@@ -181,6 +182,8 @@ CREATE TABLE BIG_DATA.Usuario (
 	telefono NUMERIC (18,0),
 	direccion NVARCHAR (255),
 	fecha_Nacimiento DATETIME,
+	estadoUsuario BIT,
+	user_intentos_fallidos INT
 	
 	PRIMARY KEY (username),
 	FOREIGN KEY (idRol) REFERENCES BIG_DATA.Rol (idRol),
@@ -543,5 +546,312 @@ GO
 		FROM [BIG_DATA].[Consumible] c,[BIG_DATA].[Estadia] e,[gd_esquema].[Maestra] m,BIG_DATA.Reserva r
 		WHERE (m.Consumible_Codigo=c.idConsumible) AND (m.Reserva_Codigo = r.idReserva  and
 		e.idReserva = r.idReserva and m.Factura_Nro IS NOT NULL)
+
+GO
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------CREACION STORED PROCEDURES----------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+--Rol
+
+CREATE PROCEDURE BIG_DATA.crear_rol
+	@nombreRol nvarchar(255),
+	@funcionalidad1 nvarchar(255),
+	@funcionalidad2 nvarchar(255),
+	@funcionalidad3 nvarchar(255),
+	@funcionalidad4 nvarchar(255),
+	@funcionalidad5 nvarchar(255),
+	@funcionalidad6 nvarchar(255),
+	@funcionalidad7 nvarchar(255),
+	@funcionalidad8 nvarchar(255),
+	@funcionalidad9 nvarchar(255),
+	@funcionalidad10 nvarchar(255),
+	@funcionalidad11 nvarchar(255),
+	@funcionalidad12 nvarchar(255),
+	@funcionalidad13 nvarchar(255),
+	@estado bit
+AS
+BEGIN
+	DECLARE @idRol numeric (18,0)
+	IF NOT EXISTS (SELECT * FROM BIG_DATA.Rol WHERE rolDesc = @nombreRol)
+BEGIN
+	INSERT INTO BIG_DATA.Rol (rolDesc,estadoRol) VALUES (@nombreRol,@estado)
+END
+
+ELSE
+BEGIN
+	RAISERROR('Ya existe el rol.',16,1)
+END
+	SET @idRol = SCOPE_IDENTITY();
+	INSERT INTO BIG_DATA.FuncionXRol (idRol,idFuncion) VALUES (@idRol,@funcionalidad1)
+/*Se podria seguir asi pero algunas van a ser nulas y va a tirar error.. y lo que tmb estaba pensando 
+es que capaz al declarar 13 funcionalidades.. capaz espera las 13 y tira error si lellegan menos*/
+END
+GO
+
+
+--Quitar funcionalidad Rol
+
+CREATE PROCEDURE BIG_DATA.quitar_funcionalidad
+	@nombreRol nvarchar(255),
+	@funcionalidad nvarchar(255)
+AS
+BEGIN
+	DECLARE @idRol numeric(18,0) = (select idRol from BIG_DATA.Rol r where r.rolDesc = @nombreRol)
+	DECLARE @idFuncion numeric (18,0) = (select idFuncion from BIG_DATA.Funcion f where f.funcionDesc = @funcionalidad)
+	
+	DELETE
+	FROM BIG_DATA.FuncionXRol
+	where idRol = @idRol AND idFuncion = @idFuncion
+END
+GO
+
+--Agregar funcionalidad a Rol
+CREATE PROCEDURE BIG_DATA.agregar_funcionalidad
+	@nombreRol nvarchar(255),
+	@funcionalidad nvarchar(255)
+
+AS
+BEGIN
+	DECLARE @idRol numeric(18,0) = (select idRol from BIG_DATA.Rol r where r.rolDesc = @nombreRol)
+	DECLARE @idFuncion numeric (18,0) = (select idFuncion from BIG_DATA.Funcion f where f.funcionDesc = @funcionalidad)
+
+INSERT INTO BIG_DATA.FuncionXRol VALUES (@idRol,@idFuncion)
+
+END
+
+GO
+--Eliminacion de Rol
+
+CREATE PROCEDURE BIG_DATA.eliminar_rol
+	@nombreRol nvarchar(255)
+
+AS
+BEGIN
+	DECLARE @idRol numeric(18,0) = (select idRol from BIG_DATA.Rol r where r.rolDesc = @nombreRol)
+
+	UPDATE BIG_DATA.Rol
+	SET estadoRol = 0
+	where idRol = @idRol
+END
+
+GO
+--Habilitar Rol
+
+CREATE PROCEDURE BIG_DATA.habilitar_rol
+	@nombreRol nvarchar(255)
+
+AS
+BEGIN
+	DECLARE @idRol numeric(18,0) = (select idRol from BIG_DATA.Rol r where r.rolDesc = @nombreRol)
+
+	UPDATE BIG_DATA.Rol
+	SET estadoRol = 1
+	where idRol = @idRol
+END
+
+GO
+--Mostrar roles para filtrado
+
+CREATE PROCEDURE get_roles --ACA QUIZAS ALLA QUE PONER UNA VARIABLE TIPO TABLA COMO OUTPUT PARA Q FUNCIONE QUIZAS.. AUNQUE CAPAZ ASI FUNCIONA PARA EL C#
+AS
+BEGIN	
+	select rolDesc from BIG_DATA.Rol
+END
+
+GO
+--Crear Administrador o recepcionista
+
+CREATE PROCEDURE BIG_DATA.crear_usuario
+	@Username nvarchar(255),
+	@Password nvarchar(255),
+	@Rol nvarchar(255),
+	@Nombre nvarchar(255),
+	@Apellido nvarchar(255),
+	@TipoDocumento nvarchar(255), 
+	@Nrodocumento numeric (18,0),
+	@Mail nvarchar(255),
+	@Teléfono numeric (18,0),
+	@Dirección nvarchar (255),
+	@FechaNacimiento datetime,
+	@Hotel nvarchar(255) --ACA HAY QUE VER SI MANEJAMOS NOMBRE DE HOTEL (POR AHORA NO TENEMOS NIGUNO) O BUSCAMOS POR VARIOS CAMPOS
+	--DEPENDIENDO QUE USEMOS HAY QUE AGREGAR UN SEGUNDO INSERT COMO HICE EN EL PRIMER SP (despues del end catch), para agrgar a la tabla intermedia, no termina aca.
+AS
+BEGIN
+	DECLARE @passwordEncriptada nvarchar(255) = cast((SELECT HASHBYTES('SHA2_256',@Password)) AS nvarchar(255))
+	BEGIN TRY
+			INSERT INTO BIG_DATA.Usuario (username,userpassword,idRol,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento)
+	VALUES (@Username,@passwordEncriptada,@Rol,@Nombre,@Apellido,@TipoDocumento,@Nrodocumento,@Mail,@Teléfono,@Dirección,@FechaNacimiento)
+
+	END TRY
+	
+	BEGIN CATCH
+			RAISERROR('Campo invalido',16,1) --POR SI TIRA ERROR DE USERNAME O DE MAIL Q TIENEN Q SER UNICOS
+	END CATCH
+END
+
+GO
+--Crear Guest/Cliente
+
+CREATE PROCEDURE BIG_DATA.crear_usuario_guest
+	@Username nvarchar(255),
+	@Password nvarchar(255),
+	@Rol nvarchar(255),
+	@Nombre nvarchar(255),
+	@Apellido nvarchar(255),
+	@TipoDocumento nvarchar(255), 
+	@Nrodocumento numeric (18,0),
+	@Mail nvarchar(255),
+	@Teléfono numeric (18,0),
+	@Dirección nvarchar (255),
+	@FechaNacimiento datetime
+AS
+BEGIN
+	DECLARE @passwordEncriptada nvarchar(255) = cast((SELECT HASHBYTES('SHA2_256',@Password)) AS nvarchar(255))
+	BEGIN TRY
+			INSERT INTO BIG_DATA.Usuario (username,userpassword,idRol,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento)
+	VALUES (@Username,@passwordEncriptada,@Rol,@Nombre,@Apellido,@TipoDocumento,@Nrodocumento,@Mail,@Teléfono,@Dirección,@FechaNacimiento)
+
+	END TRY
+	
+	BEGIN CATCH
+			RAISERROR('Campo invalido',16,1) --POR SI TIRA ERROR DE USERNAME O DE MAIL Q TIENEN Q SER UNICOS
+	END CATCH
+END
+
+GO
+
+--Modificar Password Usuario
+
+CREATE PROCEDURE BIG_DATA.modificar_password
+
+	@username nvarchar(255),
+	@NuevoPassword nvarchar(255)
+AS
+BEGIN
+	DECLARE @NuevoPasswordEncriptado nvarchar(255) = cast((SELECT HASHBYTES('SHA2_256',@NuevoPassword)) AS nvarchar(255))
+	UPDATE BIG_DATA.Usuario
+	SET userpassword = @NuevoPasswordEncriptado
+	where username = @username
+
+END
+
+GO
+--Baja Usuario
+
+CREATE PROCEDURE BIG_DATA.baja_usuario
+
+	@username nvarchar(255)
+
+AS
+BEGIN
+	
+	UPDATE BIG_DATA.Usuario
+	SET estadoUsuario = 0
+	WHERE username = @username
+
+END
+
+GO
+--Habilitar Usuario
+
+CREATE PROCEDURE BIG_DATA.alta_usuario
+
+	@username nvarchar(255)
+
+AS
+BEGIN
+
+	UPDATE BIG_DATA.Usuario
+	SET estadoUsuario = 1
+	WHERE username = @username
+
+END
+
+GO
+
+--Login Usuario
+
+CREATE PROCEDURE BIG_DATA.login_usuario
+	
+	@username nvarchar(255), 
+	@password_ingresada nvarchar(255)
+
+AS
+BEGIN
+
+	DECLARE @password nvarchar(255),
+			@passwordEncriptada nvarchar(255),
+			@intentos tinyint,
+			@existe_usuario int,
+			@usuario_habilitado bit
+
+	SELECT @existe_usuario = COUNT(*)
+	FROM BIG_DATA.Usuario
+	WHERE username = @username
+
+
+	IF @existe_usuario = 0
+		BEGIN
+			RAISERROR('El usuario no existe o los datos ingresados son incorrectos.', 16, 1)
+			RETURN
+		END
+
+
+	SELECT @usuario_habilitado = estadoUsuario
+	FROM BIG_DATA.Usuario
+	WHERE username = @username
+
+	IF @usuario_habilitado = 0
+		BEGIN
+			RAISERROR('El usuario ha sido inhabilitado. Por favor, contáctese con un administrador', 16, 1)
+			RETURN
+		END
+
+
+	SELECT @password = userpassword
+	FROM BIG_DATA.Usuario
+	WHERE username = @username
+
+	SELECT @passwordEncriptada = cast(HASHBYTES('SHA2_256',@password_ingresada) AS nvarchar(255))
+
+	IF @password <> @passwordEncriptada
+		BEGIN
+			RAISERROR('Contraseña incorrecta.', 16, 1)
+
+			UPDATE BIG_DATA.Usuario
+			SET user_intentos_fallidos = user_intentos_fallidos + 1
+			WHERE username =  @username
+
+			SELECT @intentos = user_intentos_fallidos
+			FROM BIG_DATA.Usuario
+			WHERE username = @username
+
+			IF @intentos >= 3
+			BEGIN
+				RAISERROR('Ha ingresado la contraseña 3 veces de forma incorrecta. El usuario ha sido inhabilitado', 16, 1)
+
+				UPDATE BIG_DATA.Usuario
+				SET estadoUsuario = 0
+				WHERE username = @username
+
+				RETURN
+			END
+		
+		END
+	ELSE
+		BEGIN
+			UPDATE BIG_DATA.Usuario
+			SET user_intentos_fallidos = 0
+			WHERE username = @username
+			RETURN
+		END
+END
+
+GO
 
 
