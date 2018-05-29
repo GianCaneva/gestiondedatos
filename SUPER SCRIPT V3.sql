@@ -189,7 +189,6 @@ CREATE TABLE BIG_DATA.Usuario (
 	FOREIGN KEY (tipo_documento) REFERENCES BIG_DATA.TipoDocumento (idDocumento)
 )
 
-
 CREATE TABLE BIG_DATA.Cliente (
 	idCliente NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
 	nombre NVARCHAR (255) NOT NULL,
