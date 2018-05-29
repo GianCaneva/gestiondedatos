@@ -182,8 +182,8 @@ CREATE TABLE BIG_DATA.Usuario (
 	telefono NUMERIC (18,0),
 	direccion NVARCHAR (255),
 	fecha_Nacimiento DATETIME,
-	estadoUsuario BIT,
-	user_intentos_fallidos INT
+	estadoUsuario BIT DEFAULT 1 NOT NULL,
+	user_intentos_fallidos INT DEFAULT 0 NOT NULL
 	
 	PRIMARY KEY (username),
 	FOREIGN KEY (idRol) REFERENCES BIG_DATA.Rol (idRol),
