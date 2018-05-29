@@ -1,0 +1,20 @@
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP Año pasado\PagoAgilGDD\GestionHotelera\bin\Debug\GestionHotelera.exe.config
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\GestionHotelera\bin\Debug\GestionHotelera.exe.config
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\GestionHotelera\obj\Debug\GestionHotelera.csprojResolveAssemblyReference.cache
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\GestionHotelera\obj\Debug\GestionHotelera.ABM_Clientes.AltaCliente.resources
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\GestionHotelera\obj\Debug\GestionHotelera.ABM_Clientes.ClienteForm.resources
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\GestionHotelera\obj\Debug\GestionHotelera.Properties.Resources.resources
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\GestionHotelera\obj\Debug\GestionHotelera.csproj.GenerateResource.Cache
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\bin\Debug\GestionHotelera.exe.config
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\obj\Debug\GestionHotelera.csprojResolveAssemblyReference.cache
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\obj\Debug\GestionHotelera.ABM_Clientes.AltaCliente.resources
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\obj\Debug\GestionHotelera.ABM_Clientes.ClienteForm.resources
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\obj\Debug\GestionHotelera.Form1.resources
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\obj\Debug\GestionHotelera.Properties.Resources.resources
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\obj\Debug\GestionHotelera.csproj.GenerateResource.Cache
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\bin\Debug\GestionHotelera.exe
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\bin\Debug\GestionHotelera.pdb
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\obj\Debug\GestionHotelera.exe
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\obj\Debug\GestionHotelera.pdb
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\obj\Debug\GestionHotelera.Login.Form1.resources
+C:\Users\Gian\Documents\UTN\3ºAño\Gestion de Datos\TP Gestion de Datos\TP\Repo\gestiondedatos\GestionHotelera\obj\Debug\GestionHotelera.Form0.resources
