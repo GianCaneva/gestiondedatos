@@ -5,7 +5,7 @@
 ---------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
 
-DECLARE @Sql VARCHAR(MAX)
+DECLARE @Sql NVARCHAR(MAX)
       , @Schema varchar(20)
 	  ,@test varchar(2500)
 
@@ -50,76 +50,7 @@ ORDER BY ROUTINE_NAME
 
 SELECT @Sql = COALESCE(REPLACE(@Sql,'%SCHEMA%',@Schema), '')
 
-PRINT @Sql
-
-
----------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------
----------------------------------------QUERY PARA BORRADO MASIVO ----------------------------------------
----------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------
-ALTER TABLE BIG_DATA.CierreHotel drop constraint FK__CierreHot__idHot__68A8708A;
-ALTER TABLE BIG_DATA.Ciudad drop constraint FK__Ciudad__idPaisNa__4A23E96A;
-ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__tipo_Do__55959C16;
-ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__naciona__5689C04F;
-ALTER TABLE BIG_DATA.Cliente drop constraint FK__Cliente__paisOri__577DE488;
-ALTER TABLE BIG_DATA.ConsumibleXEstadia drop constraint FK__Consumibl__idEst__007FFA1B;
-ALTER TABLE BIG_DATA.ConsumibleXEstadia drop constraint FK__Consumibl__idCon__01741E54;
-ALTER TABLE BIG_DATA.Estadia drop constraint FK__Estadia__idReser__6B84DD35;
-ALTER TABLE BIG_DATA.Factura drop constraint FK__Factura__idClien__6E6149E0;
-ALTER TABLE BIG_DATA.FuncionXRol drop constraint FK__FuncionXR__idRol__7CAF6937;
-ALTER TABLE BIG_DATA.FuncionXRol drop constraint FK__FuncionXR__idFun__7DA38D70;
-ALTER TABLE BIG_DATA.Habitacion drop constraint FK__Habitacio__idTip__5C4299A5;
-ALTER TABLE BIG_DATA.Hotel drop constraint FK__Hotel__idCiudad__4EE89E87;
-ALTER TABLE BIG_DATA.Hotel drop constraint FK__Hotel__paisHotel__4DF47A4E;
-ALTER TABLE BIG_DATA.Item drop constraint FK__Item__idFactura__713DB68B;
-ALTER TABLE BIG_DATA.Item drop constraint FK__Item__idEstadia__7231DAC4;
-ALTER TABLE BIG_DATA.RegimenXHotel drop constraint FK__RegimenXH__idReg__750E476F;
-ALTER TABLE BIG_DATA.RegimenXHotel drop constraint FK__RegimenXH__idHot__76026BA8;
-ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idTipoH__61074EC2;
-ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idHotel__61FB72FB;
-ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idRegim__62EF9734;
-ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idHabit__63E3BB6D;
-ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idClien__64D7DFA6;
-ALTER TABLE BIG_DATA.Reserva drop constraint FK__Reserva__idEstad__65CC03DF;
-ALTER TABLE BIG_DATA.Usuario drop constraint FK__Usuario__idRol__51C50B32;
-ALTER TABLE BIG_DATA.Usuario drop constraint FK__Usuario__tipo_Do__52B92F6B;
-ALTER TABLE BIG_DATA.UsuarioXHotel drop constraint FK__UsuarioXH__idHot__78DED853;
-ALTER TABLE BIG_DATA.UsuarioXHotel drop constraint FK__UsuarioXH__usern__79D2FC8C;
-DROP TABLE BIG_DATA.[CierreHotel];
-DROP TABLE BIG_DATA.[Ciudad];
-DROP TABLE BIG_DATA.[Cliente];
-DROP TABLE BIG_DATA.[Consumible];
-DROP TABLE BIG_DATA.[ConsumibleXEstadia];
-DROP TABLE BIG_DATA.[Estadia];
-DROP TABLE BIG_DATA.[EstadoReserva];
-DROP TABLE BIG_DATA.[Factura];
-DROP TABLE BIG_DATA.[Funcion];
-DROP TABLE BIG_DATA.[FuncionXRol];
-DROP TABLE BIG_DATA.[Habitacion];
-DROP TABLE BIG_DATA.[Hotel];
-DROP TABLE BIG_DATA.[Item];
-DROP TABLE BIG_DATA.[PaisNacionalidad];
-DROP TABLE BIG_DATA.[Regimen];
-DROP TABLE BIG_DATA.[RegimenXHotel];
-DROP TABLE BIG_DATA.[Reserva];
-DROP TABLE BIG_DATA.[Rol];
-DROP TABLE BIG_DATA.[TipoDocumento];
-DROP TABLE BIG_DATA.[TipoHabitacion];
-DROP TABLE BIG_DATA.[Usuario];
-DROP TABLE BIG_DATA.[UsuarioXHotel];
-
-
-
-
-
-
-
-
-
-
-
+EXECUTE sp_executesql @Sql
 
 
 
