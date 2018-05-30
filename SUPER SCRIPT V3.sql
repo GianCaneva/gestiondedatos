@@ -173,7 +173,6 @@ CREATE TABLE BIG_DATA.Hotel (
 CREATE TABLE BIG_DATA.Usuario (
 	username NVARCHAR (255) NOT NULL,
 	userpassword NVARCHAR (20),
-	idRol NUMERIC (18,0),
 	nombre NVARCHAR (255),
 	apellido NVARCHAR (255),
 	tipo_Documento NUMERIC (18,0),
@@ -182,8 +181,8 @@ CREATE TABLE BIG_DATA.Usuario (
 	telefono NUMERIC (18,0),
 	direccion NVARCHAR (255),
 	fecha_Nacimiento DATETIME,
-	estadoUsuario BIT,
-	user_intentos_fallidos INT
+	estadoUsuario NUMERIC (18,0),
+	user_intentos_fallidos NUMERIC (18,0)
 	
 	PRIMARY KEY (username),
 	FOREIGN KEY (tipo_documento) REFERENCES BIG_DATA.TipoDocumento (idDocumento)
@@ -419,13 +418,12 @@ GO
 	INSERT INTO [BIG_DATA].[Funcion] (funcionDesc)
 		VALUES ('ABM de Rol'),('Login y Seguridad'),('ABM de Usuario'),('ABM de Cliente'),('ABM de Hotel'),('ABM de Habitacion'),('ABM Regimen de Estadia'),('Generar O Modificar una Reserva'),('Cancelar Reserva'),('Registrar Estadia'),('Registrar Consumibles'),('Facturar Estadia'),('Listado Estadistico')
 
---Adicion Valores Tabla Usuario
-	INSERT INTO [BIG_DATA].[Usuario] (username,userpassword,idRol,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento)
-		VALUES ('Administrador',ENCRYPTBYPASSPHRASE('MOAP','Administrador'),1,'NombreAdministrador','ApellidoAdministrador', 1, 11111111,'Administrador@administrador.com',1511111111,'CalleAdministrador',01/01/1900),	
-		('Recepcionista',ENCRYPTBYPASSPHRASE('MOAP','Recepcionista'),2,'NombreRecepcionista','ApellidoRecepcionista', 1, 22222222,'Recepcionista@recepcionista.com',1522222222,'CalleRecepcionista',01/01/1900),	
-		('Guest',ENCRYPTBYPASSPHRASE('MOAP','Guest'),1,'NombreGuest','ApellidoGuest', 3, 33333333,'Guest@guest.com',3333333333,'CalleGuest',01/01/1900)	
-
-
+--Adicion Valores Tabla Usuario	
+	INSERT INTO [BIG_DATA].[Usuario] (username,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento,estadoUsuario,user_intentos_fallidos,userpassword)
+		VALUES ('Administrador','NombreAdministrador','ApellidoAdministrador', 1, 11111111,'Administrador@administrador.com',1511111111,'CalleAdministrador',01/01/1900,1,0,HASHBYTES('SHA2_256', CONVERT(nvarchar(255), 'Administrador'))),
+		('Recepcionista','NombreRecepcionista','ApellidoRecepcionista', 1, 22222222,'Recepcionista@recepcionista.com',1522222222,'CalleRecepcionista',01/01/1900,1,0,HASHBYTES('SHA2_256', CONVERT(nvarchar(255), 'Recepcionista'))),
+		('Guest','NombreGuest','ApellidoGuest', 1, 33333333,'Guest@guest.com',1533333333,'CalleGuest',01/01/1900,1,0,HASHBYTES('SHA2_256', CONVERT(nvarchar(255), 'Guest')))
+		
 --Migracion Tabla Consumible
 	SET IDENTITY_INSERT [BIG_DATA].[Consumible] ON
 
@@ -546,6 +544,16 @@ GO
 		OR
 		(rolDesc='Administrador' AND 
 		funcionDesc LIKE '%')
+	
+
+--Adicion Valores Tabla UsuarioXRol
+	INSERT INTO [BIG_DATA].[UsuarioXRol] (username,idRol)
+	SELECT u.username, r.idRol
+	FROM [BIG_DATA].[Usuario] u,[BIG_DATA].[Rol] r
+	WHERE (u.username='Administrador' and r.idRol=1) or 
+	(u.username='Recepcionista' and r.idRol=2) or 
+	(u.username='Guest' and r.idRol=3)or
+	(u.username='Administrador' and r.idRol=2)
 	
 
 --Adicion Valores Tabla ConsumiblesXEstadia
