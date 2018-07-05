@@ -199,7 +199,7 @@ CREATE TABLE BIG_DATA.Cliente (
 	mail NVARCHAR (255) NOT NULL,
 	telefono NUMERIC (18,0),
 	calle NVARCHAR (255),
-	numero_Calle NVARCHAR(255),
+	numero_Calle numeric(18, 0),
 	piso NUMERIC(18,0),
 	departamento NVARCHAR(50),
 	localidad NVARCHAR (255),
@@ -691,24 +691,31 @@ GO
 
 CREATE PROCEDURE BIG_DATA.crear_usuario
 	@Username nvarchar(255),
-	@Password nvarchar(255),
-	@Rol nvarchar(255),
+	@Password nvarchar(20),
+	@Rol numeric (18,0),
 	@Nombre nvarchar(255),
 	@Apellido nvarchar(255),
-	@TipoDocumento nvarchar(255), 
+	@TipoDocumento numeric(18, 0), 
 	@Nrodocumento numeric (18,0),
 	@Mail nvarchar(255),
 	@Teléfono numeric (18,0),
 	@Dirección nvarchar (255),
 	@FechaNacimiento datetime,
-	@Hotel nvarchar(255) --ACA HAY QUE VER SI MANEJAMOS NOMBRE DE HOTEL (POR AHORA NO TENEMOS NIGUNO) O BUSCAMOS POR VARIOS CAMPOS
+	@Hotel numeric(18, 0) --ACA HAY QUE VER SI MANEJAMOS NOMBRE DE HOTEL (POR AHORA NO TENEMOS NIGUNO) O BUSCAMOS POR VARIOS CAMPOS
 	--DEPENDIENDO QUE USEMOS HAY QUE AGREGAR UN SEGUNDO INSERT COMO HICE EN EL PRIMER SP (despues del end catch), para agrgar a la tabla intermedia, no termina aca.
 AS
 BEGIN
 	DECLARE @passwordEncriptada nvarchar(255) = cast((SELECT HASHBYTES('SHA2_256',@Password)) AS nvarchar(255))
 	BEGIN TRY
-			INSERT INTO BIG_DATA.Usuario (username,userpassword,idRol,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento)
+			INSERT INTO BIG_DATA.Usuario (username,userpassword,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento)
 	VALUES (@Username,@passwordEncriptada,@Rol,@Nombre,@Apellido,@TipoDocumento,@Nrodocumento,@Mail,@Teléfono,@Dirección,@FechaNacimiento)
+
+
+	INSERT INTO [BIG_DATA].[UsuarioXRol] (username,idRol) VALUES (@Username,@Rol)
+
+	INSERT INTO [BIG_DATA].[UsuarioXHotel] (idHotel,username) VALUES (@Hotel,@Username)
+
+
 
 	END TRY
 	
@@ -722,11 +729,11 @@ GO
 
 CREATE PROCEDURE BIG_DATA.crear_usuario_guest
 	@Username nvarchar(255),
-	@Password nvarchar(255),
+	@Password nvarchar(20),
 	@Rol nvarchar(255),
 	@Nombre nvarchar(255),
 	@Apellido nvarchar(255),
-	@TipoDocumento nvarchar(255), 
+	@TipoDocumento numeric(18,0), 
 	@Nrodocumento numeric (18,0),
 	@Mail nvarchar(255),
 	@Teléfono numeric (18,0),
@@ -736,8 +743,9 @@ AS
 BEGIN
 	DECLARE @passwordEncriptada nvarchar(255) = cast((SELECT HASHBYTES('SHA2_256',@Password)) AS nvarchar(255))
 	BEGIN TRY
-			INSERT INTO BIG_DATA.Usuario (username,userpassword,idRol,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento)
-	VALUES (@Username,@passwordEncriptada,@Rol,@Nombre,@Apellido,@TipoDocumento,@Nrodocumento,@Mail,@Teléfono,@Dirección,@FechaNacimiento)
+			INSERT INTO BIG_DATA.Usuario (username,userpassword,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento)
+	VALUES (@Username,@passwordEncriptada,@Nombre,@Apellido,@TipoDocumento,@Nrodocumento,@Mail,@Teléfono,@Dirección,@FechaNacimiento)
+	INSERT INTO [BIG_DATA].[UsuarioXRol] (username,idRol) VALUES (@Username,@Rol)
 
 	END TRY
 	
@@ -753,10 +761,10 @@ GO
 CREATE PROCEDURE BIG_DATA.modificar_password
 
 	@username nvarchar(255),
-	@NuevoPassword nvarchar(255)
+	@NuevoPassword nvarchar(20)
 AS
 BEGIN
-	DECLARE @NuevoPasswordEncriptado nvarchar(255) = cast((SELECT HASHBYTES('SHA2_256',@NuevoPassword)) AS nvarchar(255))
+	DECLARE @NuevoPasswordEncriptado nvarchar(20) = cast((SELECT HASHBYTES('SHA2_256',@NuevoPassword)) AS nvarchar(20))
 	UPDATE BIG_DATA.Usuario
 	SET userpassword = @NuevoPasswordEncriptado
 	where username = @username
@@ -802,13 +810,13 @@ GO
 CREATE PROCEDURE BIG_DATA.login_usuario
 	
 	@username nvarchar(255), 
-	@password_ingresada nvarchar(255)
+	@password_ingresada nvarchar(20)
 
 AS
 BEGIN
 
-	DECLARE @password nvarchar(255),
-			@passwordEncriptada nvarchar(255),
+	DECLARE @password nvarchar(20),
+			@passwordEncriptada nvarchar(20),
 			@intentos tinyint,
 			@existe_usuario int,
 			@usuario_habilitado bit
@@ -840,7 +848,7 @@ BEGIN
 	FROM BIG_DATA.Usuario
 	WHERE username = @username
 
-	SELECT @passwordEncriptada = cast(HASHBYTES('SHA2_256',@password_ingresada) AS nvarchar(255))
+	SELECT @passwordEncriptada = cast(HASHBYTES('SHA2_256',@password_ingresada) AS nvarchar(20))
 
 	IF @password <> @passwordEncriptada
 		BEGIN
@@ -883,18 +891,18 @@ CREATE PROCEDURE BIG_DATA.crear_cliente
 
 	@nombre nvarchar(255),
 	@apellido nvarchar(255),
-	@tipoDocumento nvarchar(255),
+	@tipoDocumento numeric(18, 0),
 	@numeroDocumento numeric (18,0),
 	@mail nvarchar(255),
 	@telefono numeric(18,0),
 	@calle nvarchar(255),
 	@nroCalle numeric(18,0),
-	@departamento numeric(18,0),
+	@departamento nvarchar(50),
 	@piso numeric(18,0),
 	@localidad nvarchar(255),
-	@paisOrigen nvarchar(255),
+	@paisOrigen numeric(18, 0),
 	@fechaNacimiento datetime,
-	@nacionalidad nvarchar(255)
+	@nacionalidad numeric(18, 0)
 
 AS
 BEGIN
@@ -919,6 +927,7 @@ BEGIN
 	
 		VALUES (@nombre,@apellido,@tipoDocumento,@numeroDocumento,@nacionalidad,@mail,@telefono,
 		@calle,@nroCalle,@piso,@departamento,@localidad,@paisOrigen,@fechaNacimiento) 
+
 	END TRY
 	
 	BEGIN CATCH
@@ -931,7 +940,7 @@ GO
 --Modificar Nombre
 CREATE PROCEDURE BIG_DATA.modificar_nombre_Cliente
 	@nombre nvarchar(255),
-	@tipoDocumento nvarchar(255),
+	@tipoDocumento numeric (18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -943,7 +952,7 @@ GO
 --Modificar Apellido
 CREATE PROCEDURE BIG_DATA.modificar_apellido_Cliente
 	@apellido nvarchar(255),
-	@tipoDocumento nvarchar(255),
+	@tipoDocumento numeric (18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -955,8 +964,8 @@ END
 GO
 --Modificar Tipo de identificacion
 CREATE PROCEDURE BIG_DATA.modificar_tipoDocumento_Cliente
-	@tipoDocumentoNuevo nvarchar(255),
-	@tipoDocumentoViejo nvarchar(255),
+	@tipoDocumentoNuevo numeric(18,0),
+	@tipoDocumentoViejo numeric(18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -970,7 +979,7 @@ GO
 --Modificar Numero de documento
 CREATE PROCEDURE BIG_DATA.modificar_numeroDocumento_Cliente
 	@documentoNuevo numeric(18,0),
-	@tipoDocumento nvarchar(255),
+	@tipoDocumento numeric(18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -984,7 +993,7 @@ GO
 --Modificar Telefono
 CREATE PROCEDURE BIG_DATA.modificar_telefono_Cliente
 	@telefono numeric(18,0),
-	@tipoDocumento nvarchar(255),
+	@tipoDocumento numeric(18,0),
 	@documento numeric(18,0)
 
 AS
@@ -1000,7 +1009,7 @@ GO
 --Modificar Calle
 CREATE PROCEDURE BIG_DATA.modificar_calle_Cliente
 	@calle nvarchar(255),
-	@tipoDocumento nvarchar(255),
+	@tipoDocumento numeric(18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -1014,8 +1023,8 @@ GO
 
 --Modificar NroCalle
 CREATE PROCEDURE BIG_DATA.modificar_numeroCalle_Cliente
-	@numero nvarchar(255),
-	@tipoDocumento nvarchar(255),
+	@numero numeric(18,0),
+	@tipoDocumento numeric(18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -1029,7 +1038,7 @@ GO
 --Modificar dpto
 CREATE PROCEDURE BIG_DATA.modificar_departamento_Cliente
 	@dpto numeric(18,0),
-	@tipoDocumento nvarchar(255),
+	@tipoDocumento numeric(18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -1043,7 +1052,7 @@ GO
 --Modificar piso
 CREATE PROCEDURE BIG_DATA.modificar_piso_Cliente
 	@piso numeric (18,0),
-	@tipoDocumento nvarchar(255),
+	@tipoDocumento numeric(18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -1057,7 +1066,7 @@ GO
 --Modificar localidad
 CREATE PROCEDURE BIG_DATA.modificar_localidad_Cliente
 	@localidad nvarchar(255),
-	@tipoDocumento nvarchar(255),
+	@tipoDocumento numeric(18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -1071,8 +1080,8 @@ GO
 
 --Modificar pais de origen
 CREATE PROCEDURE BIG_DATA.modificar_paisOrigen_Cliente
-	@pais nvarchar(255),
-	@tipoDocumento nvarchar(255),
+	@pais numeric(18,0),
+	@tipoDocumento numeric(18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -1086,7 +1095,7 @@ GO
 --Modificar fecha de nacimiento
 CREATE PROCEDURE BIG_DATA.modificar_nacimiento_Cliente
 	@nacimiento datetime,
-	@tipoDocumento nvarchar(255),
+	@tipoDocumento numeric(18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -1099,8 +1108,8 @@ GO
 
 --Modificar nacionalidad
 CREATE PROCEDURE BIG_DATA.modificar_nacionalidad_Cliente
-	@nacionalidad nvarchar(255),
-	@tipoDocumento nvarchar(255),
+	@nacionalidad numeric(18,0),
+	@tipoDocumento numeric(18,0),
 	@documento numeric(18,0)
 AS
 BEGIN
@@ -1111,11 +1120,32 @@ BEGIN
 END
 GO
 
---habilitacion Cliente
+
+--Modificar Mail Cliente
+
+CREATE PROCEDURE BIG_DATA.modificar_mail_Cliente
+@tipoDocumento numeric (18,0),
+@documento numeric(18,0),
+@mail nvarchar(255)
+AS
+BEGIN
+	BEGIN TRY
+		UPDATE BIG_DATA.Cliente
+		SET mail = @mail
+		WHERE tipo_Documento = @tipoDocumento AND documento = @documento
+	END TRY
+
+	BEGIN CATCH
+			RAISERROR('Mail invalido',16,1) --MAIL Q TIENE Q SER UNICO Y REBOTA POR EL UNIQUE DE LA TABLA
+	END CATCH
+END
+
+GO
+--habilitacion/Deshabilitar Cliente
 
 CREATE PROCEDURE BIG_DATA.habilitacion_cliente
 	
-	@tipoDocumento nvarchar(255),
+	@tipoDocumento numeric(18,0),
 	@documento numeric(18,0),
 	@estado bit
 
@@ -1129,7 +1159,86 @@ GO
 
 --FALTA EL SELECCIONAR UN CLIENTE
 
+--Filtrar cliente por nombre (Hay que ver si lo hacemos por parte del nombre o nombre exacto.. porque dice campo libre)
+
+CREATE PROCEDURE BIG_DATA.filtrar_Cliente_Nombre
+@nombre nvarchar(255)
+
+AS 
+BEGIN
+
+SELECT idCliente, nombre, apellido, tipo_documento, documento
+FROM BIG_DATA.Cliente
+WHERE nombre LIKE '%'+@nombre+'%'
+
+END
+GO
+
+
+--Filtrar cliente por apellido (Hay que ver si lo hacemos por parte del nombre o nombre exacto.. porque dice campo libre)
+
+CREATE PROCEDURE BIG_DATA.filtrar_Cliente_Apellido
+@apellido nvarchar(255)
+
+AS 
+BEGIN
+
+SELECT idCliente, nombre, apellido, tipo_documento, documento
+FROM BIG_DATA.Cliente
+WHERE apellido LIKE '%'+@apellido+'%'
+
+END
+GO
+
+
+--filtrar Cliente por tipo documento
+CREATE PROCEDURE BIG_DATA.filtrar_Tipo_Documento
+@tipoDocumento  numeric(18,0)
+
+AS
+BEGIN
+
+SELECT idCliente, nombre, apellido, tipo_documento, documento
+FROM BIG_DATA.Cliente
+WHERE @tipoDocumento = tipo_Documento
+
+END
+GO
+
+--filtrar Cliente por numero documento
+CREATE PROCEDURE BIG_DATA.filtrar_Nro_Documento
+@numero numeric (18,0)
+
+AS
+BEGIN
+
+SELECT idCliente, nombre, apellido, tipo_documento, documento
+FROM BIG_DATA.Cliente
+WHERE documento LIKE ('%'+@numero+'%')
+
+END
+GO
+
+--filtrar CLiente por mail (es unico)
+
+CREATE PROCEDURE BIG_DATA.filtrar_CLiente_Mail
+
+@mail nvarchar(255)
+
+AS
+BEGIN
+
+SELECT idCliente, nombre, apellido, tipo_documento, documento
+FROM BIG_DATA.Cliente
+WHERE mail LIKE ('%'+@mail+'%')
+
+END
+GO
 
 
 
-		
+
+
+
+
+
