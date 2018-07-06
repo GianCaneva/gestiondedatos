@@ -1236,9 +1236,251 @@ END
 GO
 
 
+--Alta Hotel
+
+CREATE PROCEDURE BIG_DATA.Crear_Hotel
+@nombre nvarchar(255),
+@mail nvarchar(255),
+@telefono numeric(18,0),
+@direccion nvarchar(255),
+@numeroCalle numeric(18,0),
+@cantidadEstrellas numeric(18,0),
+@ciudad numeric(18,0),
+@pais numeric(18,0),
+@fechaCreacion datetime,
+@recarga numeric(18,0)
+
+AS
+BEGIN
+
+IF NOT EXISTS (SELECT 1 FROM BIG_DATA.Hotel WHERE nombreHotel=@nombre)
+	
+	BEGIN
+		BEGIN TRY
+		INSERT INTO BIG_DATA.Hotel VALUES (@nombre,@mail,@telefono,@direccion,@cantidadEstrellas,@ciudad,@numeroCalle,@pais,@fechaCreacion,@recarga)	
+		END TRY
+
+		BEGIN CATCH
+			RAISERROR('Error en carga',16,1)
+		END CATCH
+	END
+
+ELSE
+	BEGIN
+		RAISERROR('El hotel ya existe',16,1)
+	END
+
+END
+GO
 
 
+--Agregar Regimen de Hotel
+
+CREATE PROCEDURE BIG_DATA.Agregar_Regimen
+@idHotel numeric(18,0),
+@idRegimen numeric (18,0)
+
+AS
+BEGIN
+
+IF NOT EXISTS (SELECT 1 FROM BIG_DATA.RegimenXHotel WHERE idHotel = @idHotel AND idRegimen = @idRegimen)
+	BEGIN TRY
+	BEGIN	
+		INSERT INTO BIG_DATA.RegimenXHotel VALUES(@idRegimen,@idHotel)
+	END
+	END TRY
+
+	BEGIN CATCH
+		RAISERROR('Error de carga',16,1)
+	END CATCH
+ELSE
+	BEGIN
+		RAISERROR('El hotel ya posee el regimen',16,1)
+	END
+
+END
+GO
+
+--Modificar nombre hotel
+
+CREATE PROCEDURE BIG_DATA.modificar_nombre
+@idHotel numeric(18,0),-- O por nombre
+@nombreNuevo nvarchar(255)
+
+AS
+BEGIN
+
+UPDATE BIG_DATA.Hotel
+SET nombreHotel = @nombreNuevo
+WHERE idHotel = @idHotel
+
+END
+GO
+
+--Modificar Mail Hotel
+
+CREATE PROCEDURE BIG_DATA.modificar_mail
+@idHotel numeric(18,0),-- O por nombre
+@mailNuevo nvarchar(255)
+
+AS
+BEGIN
+
+UPDATE BIG_DATA.Hotel
+SET mailHotel = @mailNuevo
+WHERE idHotel = @idHotel
+
+END
+GO
+
+--Modificar telefono hotel
+
+CREATE PROCEDURE BIG_DATA.modificar_telefono
+@idHotel numeric(18,0),-- O por nombre
+@telefonoNuevo numeric(18,0)
+
+AS
+BEGIN
+
+UPDATE BIG_DATA.Hotel
+SET telefonoHotel = @telefonoNuevo
+WHERE idHotel = @idHotel
+
+END
+GO
+
+--Modificar direccion Hotel
+
+CREATE PROCEDURE BIG_DATA.modificar_direccion
+@idHotel numeric(18,0),-- O por nombre
+@direccionNuevo nvarchar(255)
+
+AS
+BEGIN
+
+UPDATE BIG_DATA.Hotel
+SET direccionHotel = @direccionNuevo
+WHERE idHotel = @idHotel
+
+END
+GO
+
+--Modificar cantidadEstrellas
+
+CREATE PROCEDURE BIG_DATA.modificar_cantidad_estrellas
+@idHotel numeric(18,0),-- O por nombre
+@cantidadNueva numeric (18,0)
+
+AS
+BEGIN
+
+UPDATE BIG_DATA.Hotel
+SET cantidadDeEstrellas = @cantidadNueva
+WHERE idHotel = @idHotel
+
+END
+GO
+
+--Modificar ciudad
+
+CREATE PROCEDURE BIG_DATA.modificar_ciudad
+@idHotel numeric(18,0),-- O por nombre
+@idCiudad numeric (18,0)
+
+AS
+BEGIN
+
+UPDATE BIG_DATA.Hotel
+SET idCiudad = @idCiudad
+WHERE idHotel = @idHotel
+
+END
+GO
+
+--Modificar numero calle
+
+CREATE PROCEDURE BIG_DATA.modificar_numero_calle
+@idHotel numeric(18,0),-- O por nombre
+@numero numeric(18,0)
+
+AS
+BEGIN
+
+UPDATE BIG_DATA.Hotel
+SET numeroCalle = @numero
+WHERE idHotel = @idHotel
+
+END
+GO
+
+--Modificar pais hotel
+
+CREATE PROCEDURE BIG_DATA.modificar_pais
+@idHotel numeric(18,0),-- O por nombre
+@pais numeric (18,0)
+
+AS
+BEGIN
+
+UPDATE BIG_DATA.Hotel
+SET paisHotel = @pais
+WHERE idHotel = @idHotel
+
+END
+GO
+
+--MOficair fecha creacion
+
+CREATE PROCEDURE BIG_DATA.modificar_fecha
+@idHotel numeric(18,0),-- O por nombre
+@fecha datetime
+
+AS
+BEGIN
+
+UPDATE BIG_DATA.Hotel
+SET fechaDeCreacion = @fecha
+WHERE idHotel = @idHotel
+
+END
+GO
+
+--modificar recargaEstrellas
+
+CREATE PROCEDURE BIG_DATA.modificar_rearga
+@idHotel numeric(18,0),-- O por nombre
+@recarga numeric(18,0)
+
+AS
+BEGIN
+
+UPDATE BIG_DATA.Hotel
+SET recargaEstrella = @recarga
+WHERE idHotel = @idHotel
+
+END
+GO
 
 
+--quitar regimen hotel
 
+CREATE PROCEDURE BIG_DATA.quitar_regimen_hotel
+
+@idHotel numeric (18,0),
+@idRegimen numeric (18,0)
+
+AS
+BEGIN
+
+IF NOT EXISTS (SELECT 1 FROM BIG_DATA.RegimenXHotel WHERE idHotel = @idHotel AND idRegimen  =  @idRegimen)
+	BEGIN
+		RAISERROR('El hotel no posee ese regimen',16,1)
+	END
+ELSE
+	BEGIN	
+		DELETE FROM BIG_DATA.RegimenXHotel
+		WHERE idHotel = @idHotel AND idRegimen  =  @idRegimen
+	END
+END
+GO
 
