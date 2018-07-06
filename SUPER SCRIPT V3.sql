@@ -891,7 +891,7 @@ CREATE PROCEDURE BIG_DATA.crear_cliente
 
 	@nombre nvarchar(255),
 	@apellido nvarchar(255),
-	@tipoDocumento numeric(18, 0),
+	@tipoDocumento nvarchar(255),
 	@numeroDocumento numeric (18,0),
 	@mail nvarchar(255),
 	@telefono numeric(18,0),
@@ -908,9 +908,10 @@ AS
 BEGIN
 	DECLARE @existe_cliente INT
 
+	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	SELECT @existe_cliente = COUNT(*)
 	FROM BIG_DATA.Cliente
-	WHERE tipo_Documento = @tipoDocumento AND documento = @numeroDocumento
+	WHERE tipo_Documento = @tipoDoc AND documento = @numeroDocumento
 
 
 	IF @existe_cliente = 1
@@ -925,7 +926,7 @@ BEGIN
 		INSERT INTO BIG_DATA.Cliente (nombre,apellido,tipo_Documento,documento,nacionalidad,
 		mail,telefono,calle,numero_Calle,piso,departamento,localidad,paisOrigen,fecha_Nacimiento)
 	
-		VALUES (@nombre,@apellido,@tipoDocumento,@numeroDocumento,@nacionalidad,@mail,@telefono,
+		VALUES (@nombre,@apellido,@tipoDoc,@numeroDocumento,@nacionalidad,@mail,@telefono,
 		@calle,@nroCalle,@piso,@departamento,@localidad,@paisOrigen,@fechaNacimiento) 
 
 	END TRY
@@ -940,38 +941,44 @@ GO
 --Modificar Nombre
 CREATE PROCEDURE BIG_DATA.modificar_nombre_Cliente
 	@nombre nvarchar(255),
-	@tipoDocumento numeric (18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0)
 AS
 BEGIN
+
+	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET nombre = @nombre
-	where tipo_Documento = @tipoDocumento AND documento = @documento
+	where tipo_Documento = @tipoDoc AND documento = @documento
 END
 GO
+
 --Modificar Apellido
 CREATE PROCEDURE BIG_DATA.modificar_apellido_Cliente
 	@apellido nvarchar(255),
-	@tipoDocumento numeric (18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0)
 AS
 BEGIN
+	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET apellido = @apellido
-	where tipo_Documento = @tipoDocumento AND documento = @documento
+	where tipo_Documento = @tipoDoc AND documento = @documento
 
 END
 GO
 --Modificar Tipo de identificacion
 CREATE PROCEDURE BIG_DATA.modificar_tipoDocumento_Cliente
-	@tipoDocumentoNuevo numeric(18,0),
-	@tipoDocumentoViejo numeric(18,0),
+	@tipoDocumentoNuevo nvarchar(255),
+	@tipoDocumentoViejo nvarchar(255),
 	@documento numeric(18,0)
 AS
 BEGIN
+	DECLARE @tipoDocNuevo numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumentoNuevo)
+	DECLARE @tipoDocViejo numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumentoViejo)
 	UPDATE BIG_DATA.Cliente
-	SET tipo_Documento = @tipoDocumentoNuevo
-	where tipo_Documento = @tipoDocumentoViejo AND documento = @documento
+	SET tipo_Documento = @tipoDocNuevo
+	where tipo_Documento = @tipoDocViejo AND documento = @documento
 
 END
 GO
@@ -979,13 +986,14 @@ GO
 --Modificar Numero de documento
 CREATE PROCEDURE BIG_DATA.modificar_numeroDocumento_Cliente
 	@documentoNuevo numeric(18,0),
-	@tipoDocumento numeric(18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0)
 AS
 BEGIN
+DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET documento = @documentoNuevo
-	where tipo_Documento = @tipoDocumento AND documento = @documento
+	where tipo_Documento = @tipoDoc AND documento = @documento
 
 END
 GO
@@ -993,15 +1001,15 @@ GO
 --Modificar Telefono
 CREATE PROCEDURE BIG_DATA.modificar_telefono_Cliente
 	@telefono numeric(18,0),
-	@tipoDocumento numeric(18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0)
 
 AS
 BEGIN
-	
+	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET telefono = @telefono
-	where tipo_Documento = @tipoDocumento AND documento = @documento
+	where tipo_Documento = @tipoDoc AND documento = @documento
 
 END
 GO
@@ -1009,14 +1017,14 @@ GO
 --Modificar Calle
 CREATE PROCEDURE BIG_DATA.modificar_calle_Cliente
 	@calle nvarchar(255),
-	@tipoDocumento numeric(18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0)
 AS
 BEGIN
-	
+	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET calle = @calle
-	where tipo_Documento = @tipoDocumento AND documento = @documento
+	where tipo_Documento = @tipoDoc AND documento = @documento
 
 END
 GO
@@ -1024,13 +1032,14 @@ GO
 --Modificar NroCalle
 CREATE PROCEDURE BIG_DATA.modificar_numeroCalle_Cliente
 	@numero numeric(18,0),
-	@tipoDocumento numeric(18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0)
 AS
 BEGIN
+	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET numero_Calle = @numero
-	where tipo_Documento = @tipoDocumento AND documento = @documento
+	where tipo_Documento = @tipoDoc AND documento = @documento
 
 END
 GO
@@ -1038,13 +1047,14 @@ GO
 --Modificar dpto
 CREATE PROCEDURE BIG_DATA.modificar_departamento_Cliente
 	@dpto numeric(18,0),
-	@tipoDocumento numeric(18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0)
 AS
 BEGIN
+	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET departamento = @dpto
-	where tipo_Documento = @tipoDocumento AND documento = @documento
+	where tipo_Documento = @tipoDoc AND documento = @documento
 
 END
 GO
@@ -1052,13 +1062,14 @@ GO
 --Modificar piso
 CREATE PROCEDURE BIG_DATA.modificar_piso_Cliente
 	@piso numeric (18,0),
-	@tipoDocumento numeric(18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0)
 AS
 BEGIN
+	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET piso = @piso
-	where tipo_Documento = @tipoDocumento AND documento = @documento
+	where tipo_Documento = @tipoDoc AND documento = @documento
 
 END
 GO
@@ -1081,13 +1092,14 @@ GO
 --Modificar pais de origen
 CREATE PROCEDURE BIG_DATA.modificar_paisOrigen_Cliente
 	@pais numeric(18,0),
-	@tipoDocumento numeric(18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0)
 AS
 BEGIN
+	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET paisOrigen = @pais
-	where tipo_Documento = @tipoDocumento AND documento = @documento
+	where tipo_Documento = @tipoDoc AND documento = @documento
 
 END
 GO
@@ -1095,13 +1107,14 @@ GO
 --Modificar fecha de nacimiento
 CREATE PROCEDURE BIG_DATA.modificar_nacimiento_Cliente
 	@nacimiento datetime,
-	@tipoDocumento numeric(18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0)
 AS
 BEGIN
+	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET fecha_Nacimiento = @nacimiento
-	where tipo_Documento = @tipoDocumento AND documento = @documento
+	where tipo_Documento = @tipoDoc AND documento = @documento
 
 END
 GO
@@ -1109,13 +1122,14 @@ GO
 --Modificar nacionalidad
 CREATE PROCEDURE BIG_DATA.modificar_nacionalidad_Cliente
 	@nacionalidad numeric(18,0),
-	@tipoDocumento numeric(18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0)
 AS
 BEGIN
+	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET nacionalidad = @nacionalidad
-	where tipo_Documento = @tipoDocumento AND documento = @documento
+	where tipo_Documento = @tipoDoc AND documento = @documento
 
 END
 GO
@@ -1124,15 +1138,16 @@ GO
 --Modificar Mail Cliente
 
 CREATE PROCEDURE BIG_DATA.modificar_mail_Cliente
-@tipoDocumento numeric (18,0),
+@tipoDocumento nvarchar(255),
 @documento numeric(18,0),
 @mail nvarchar(255)
 AS
 BEGIN
+DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	BEGIN TRY
 		UPDATE BIG_DATA.Cliente
 		SET mail = @mail
-		WHERE tipo_Documento = @tipoDocumento AND documento = @documento
+		WHERE tipo_Documento = @tipoDoc AND documento = @documento
 	END TRY
 
 	BEGIN CATCH
@@ -1145,15 +1160,16 @@ GO
 
 CREATE PROCEDURE BIG_DATA.habilitacion_cliente
 	
-	@tipoDocumento numeric(18,0),
+	@tipoDocumento nvarchar(255),
 	@documento numeric(18,0),
 	@estado bit
 
 AS
 BEGIN
+DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
 	UPDATE BIG_DATA.Cliente
 	SET estadoCliente = @estado
-	WHERE tipo_Documento = @tipoDocumento AND documento = @documento
+	WHERE tipo_Documento = @tipoDoc AND documento = @documento
 END
 GO
 
@@ -1167,8 +1183,8 @@ CREATE PROCEDURE BIG_DATA.filtrar_Cliente_Nombre
 AS 
 BEGIN
 
-SELECT idCliente, nombre, apellido, tipo_documento, documento
-FROM BIG_DATA.Cliente
+SELECT idCliente, nombre, apellido, tipoDocumentoDesc, documento
+FROM BIG_DATA.Cliente c JOIN BIG_DATA.TipoDocumento td ON (c.tipo_Documento = td.idDocumento)
 WHERE nombre LIKE '%'+@nombre+'%'
 
 END
@@ -1183,9 +1199,9 @@ CREATE PROCEDURE BIG_DATA.filtrar_Cliente_Apellido
 AS 
 BEGIN
 
-SELECT idCliente, nombre, apellido, tipo_documento, documento
-FROM BIG_DATA.Cliente
-WHERE apellido LIKE '%'+@apellido+'%'
+SELECT idCliente, nombre, apellido, tipoDocumentoDesc, documento
+FROM BIG_DATA.Cliente c JOIN BIG_DATA.TipoDocumento td ON (c.tipo_Documento = td.idDocumento)
+WHERE nombre LIKE '%'+@apellido+'%'
 
 END
 GO
@@ -1193,13 +1209,13 @@ GO
 
 --filtrar Cliente por tipo documento
 CREATE PROCEDURE BIG_DATA.filtrar_Tipo_Documento
-@tipoDocumento  numeric(18,0)
+@tipoDocumento  nvarchar(255)
 
 AS
 BEGIN
 
-SELECT idCliente, nombre, apellido, tipo_documento, documento
-FROM BIG_DATA.Cliente
+SELECT idCliente, nombre, apellido, tipoDocumentoDesc, documento
+FROM BIG_DATA.Cliente c JOIN BIG_DATA.TipoDocumento td ON (c.tipo_Documento = td.idDocumento)
 WHERE @tipoDocumento = tipo_Documento
 
 END
@@ -1212,8 +1228,8 @@ CREATE PROCEDURE BIG_DATA.filtrar_Nro_Documento
 AS
 BEGIN
 
-SELECT idCliente, nombre, apellido, tipo_documento, documento
-FROM BIG_DATA.Cliente
+SELECT idCliente, nombre, apellido, tipoDocumentoDesc, documento
+FROM BIG_DATA.Cliente c JOIN BIG_DATA.TipoDocumento td ON (c.tipo_Documento = td.idDocumento)
 WHERE documento LIKE ('%'+@numero+'%')
 
 END
@@ -1228,8 +1244,8 @@ CREATE PROCEDURE BIG_DATA.filtrar_CLiente_Mail
 AS
 BEGIN
 
-SELECT idCliente, nombre, apellido, tipo_documento, documento
-FROM BIG_DATA.Cliente
+SELECT idCliente, nombre, apellido, tipoDocumentoDesc, documento
+FROM BIG_DATA.Cliente c JOIN BIG_DATA.TipoDocumento td ON (c.tipo_Documento = td.idDocumento)
 WHERE mail LIKE ('%'+@mail+'%')
 
 END
@@ -1483,4 +1499,5 @@ ELSE
 	END
 END
 GO
+
 
