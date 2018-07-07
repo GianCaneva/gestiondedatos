@@ -680,6 +680,7 @@ END
 GO
 --Mostrar roles para filtrado
 
+/*
 CREATE PROCEDURE get_roles --ACA QUIZAS ALLA QUE PONER UNA VARIABLE TIPO TABLA COMO OUTPUT PARA Q FUNCIONE QUIZAS.. AUNQUE CAPAZ ASI FUNCIONA PARA EL C#
 AS
 BEGIN	
@@ -687,6 +688,8 @@ BEGIN
 END
 
 GO
+*/
+
 --Crear Administrador o recepcionista
 
 CREATE PROCEDURE BIG_DATA.crear_usuario
@@ -708,8 +711,9 @@ BEGIN
 	DECLARE @passwordEncriptada nvarchar(255) = cast((SELECT HASHBYTES('SHA2_256',@Password)) AS nvarchar(255))
 	BEGIN TRY
 			INSERT INTO BIG_DATA.Usuario (username,userpassword,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento)
-	VALUES (@Username,@passwordEncriptada,@Rol,@Nombre,@Apellido,@TipoDocumento,@Nrodocumento,@Mail,@Teléfono,@Dirección,@FechaNacimiento)
+	VALUES (@Username,@passwordEncriptada,@Nombre,@Apellido,@TipoDocumento,@Nrodocumento,@Mail,@Teléfono,@Dirección,@FechaNacimiento)
 
+	select * from BIG_DATA.Usuario
 
 	INSERT INTO [BIG_DATA].[UsuarioXRol] (username,idRol) VALUES (@Username,@Rol)
 
