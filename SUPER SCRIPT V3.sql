@@ -1505,3 +1505,89 @@ END
 GO
 
 
+--Baja Hotel
+CREATE PROCEDURE BIG_DATA.baja_hotel
+
+@FechaDesde datetime,
+@FechaHasta datetime,
+@HotelID numeric(18,0),
+@Description nvarchar (255)
+
+AS
+BEGIN
+
+IF EXISTS (SELECT 1 FROM BIG_DATA.Reserva WHERE idHotel = @HotelID and 
+(
+(@FechaDesde BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
+(@FechaHasta BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
+(@FechaDesde <= fecha_Reserva_Desde AND @FechaHasta >= fecha_Reserva_Hasta)
+)
+)
+	BEGIN
+		RAISERROR('El hotel posee reservas activas para el rango de fechas indicados',16,1)
+	END
+ELSE
+	BEGIN	
+		INSERT INTO BIG_DATA.CierreHotel (idHotel,fecha_Inicio,fecha_Fin,descripcion)
+		VALUES(@HotelID,@FechaDesde,@FechaHasta,@Description)
+	END
+END
+GO
+
+
+CREATE PROCEDURE BIG_DATA.alta_habitacion
+
+@HotelID numeric(18,0),
+@RoomNumber numeric(18,0),
+@FloorNumber numeric(18,0),
+@FrontView char(1),
+@tipoHabitacion numeric(18,0),
+@Comodidades nvarchar(255)
+
+AS
+BEGIN
+
+IF EXISTS (SELECT 1 FROM BIG_DATA.Habitacion WHERE idHotel = @HotelID and numeroHab = @FloorNumber )
+
+	BEGIN
+		DECLARE @HabitacionNumeroString VARCHAR(50)
+		SELECT @HabitacionNumeroString = CAST(@RoomNumber AS VARCHAR)
+		RAISERROR('El hotel ya posee la habitacion %s en el sistema' ,16,1,@HabitacionNumeroString)
+	END
+ELSE
+	BEGIN	
+		INSERT INTO BIG_DATA.Habitacion (idHotel,numeroHab,piso,vistaFrente,idTipo,comodidades)
+		VALUES(@HotelID,@RoomNumber,@FloorNumber,@FrontView,@tipoHabitacion,@Comodidades)
+	END
+END
+GO
+
+
+CREATE PROCEDURE BIG_DATA.modificar_habitacion
+
+@HotelID numeric(18,0),
+@RoomNumber numeric(18,0),
+@FloorNumber numeric(18,0),
+@FrontView char(1),
+@Comodidades nvarchar(255)
+
+AS
+BEGIN
+	UPDATE BIG_DATA.Habitacion SET piso=@FloorNumber ,vistaFrente=@FrontView ,comodidades=@FrontView
+	where idHotel=@HotelID and numeroHab=@RoomNumber
+END
+GO
+
+
+CREATE PROCEDURE BIG_DATA.baja_habitacion
+
+@HotelID numeric(18,0),
+@RoomNumber numeric(18,0)
+
+AS
+BEGIN
+	UPDATE BIG_DATA.Habitacion SET habitacionActiva = 0
+	where idHotel=@HotelID and numeroHab=@RoomNumber
+END
+GO
+
