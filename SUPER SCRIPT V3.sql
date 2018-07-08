@@ -1269,3 +1269,30 @@ BEGIN
 END
 GO
 
+--Cancelar Reserva
+
+CREATE PROCEDURE BIG_DATA.Cancelar_Reserva (
+@numeroReserva numeric(18,0),
+@motivo nvarchar (255),
+@fechaCancelacion datetime,
+@username nvarchar(255)
+)
+
+AS 
+BEGIN
+
+DECLARE @estadoReserva numeric(18,0) = (SELECT idEstadoREserva FROM BIG_DATA.EstadoReserva WHERE estadoReservaDesc = @motivo)
+
+DECLARE @fechaReserva datetime = (SELECT fecha_Reserva_Desde FROM BIG_DATA.Reserva WHERE idReserva = @numeroReserva)
+IF(@fechaCancelacioN >= @fechaReserva)
+	BEGIN
+	RAISERROR('Ya es tarde para cancelar reserva',16,1)
+	END
+ELSE
+	BEGIN
+	
+UPDATE BIG_DATA.Reserva
+SET idEstadoReserva = @estadoReserva
+END
+END
+GO
