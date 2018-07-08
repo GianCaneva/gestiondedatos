@@ -581,41 +581,44 @@ GO
 
 --Rol
 
-CREATE PROCEDURE BIG_DATA.crear_rol
+CREATE PROCEDURE [BIG_DATA].[crear_rol]
 	@nombreRol nvarchar(255),
-	@funcionalidad1 nvarchar(255),
-	@funcionalidad2 nvarchar(255),
-	@funcionalidad3 nvarchar(255),
-	@funcionalidad4 nvarchar(255),
-	@funcionalidad5 nvarchar(255),
-	@funcionalidad6 nvarchar(255),
-	@funcionalidad7 nvarchar(255),
-	@funcionalidad8 nvarchar(255),
-	@funcionalidad9 nvarchar(255),
-	@funcionalidad10 nvarchar(255),
-	@funcionalidad11 nvarchar(255),
-	@funcionalidad12 nvarchar(255),
-	@funcionalidad13 nvarchar(255),
 	@estado bit
 AS
 BEGIN
-	DECLARE @idRol numeric (18,0)
 	IF NOT EXISTS (SELECT * FROM BIG_DATA.Rol WHERE rolDesc = @nombreRol)
-BEGIN
-	INSERT INTO BIG_DATA.Rol (rolDesc,estadoRol) VALUES (@nombreRol,@estado)
-END
+		BEGIN
+			INSERT INTO BIG_DATA.Rol (rolDesc,estadoRol) VALUES (@nombreRol,@estado)
+		END
 
-ELSE
-BEGIN
-	RAISERROR('Ya existe el rol.',16,1)
-END
-	SET @idRol = SCOPE_IDENTITY();
-	INSERT INTO BIG_DATA.FuncionXRol (idRol,idFuncion) VALUES (@idRol,@funcionalidad1)
-/*Se podria seguir asi pero algunas van a ser nulas y va a tirar error.. y lo que tmb estaba pensando 
-es que capaz al declarar 13 funcionalidades.. capaz espera las 13 y tira error si lellegan menos*/
+	ELSE
+		BEGIN
+			RAISERROR('Ya existe el rol.',16,1)
+		END
 END
 GO
 
+--Agregar funcionalidad a Rol
+CREATE PROCEDURE [BIG_DATA].[agregar_funcionalidad]
+	@nombreRol nvarchar(255),
+	@funcionalidad nvarchar(255)
+
+AS
+BEGIN
+
+	DECLARE @idRol numeric(18,0) = (select idRol from BIG_DATA.Rol r where r.rolDesc = @nombreRol)
+	DECLARE @idFuncion numeric (18,0) = (select idFuncion from BIG_DATA.Funcion f where f.funcionDesc = @funcionalidad)
+	
+	IF NOT EXISTS (SELECT * FROM BIG_DATA.FuncionXRol WHERE idRol = @idRol AND idFuncion = @idFuncion)
+	BEGIN
+		INSERT INTO BIG_DATA.FuncionXRol VALUES (@idRol,@idFuncion)
+	END
+	ELSE
+	BEGIN
+		RAISERROR('El rol ya posee la funcionalidad.',16,1)
+	END
+END
+GO
 
 --Quitar funcionalidad Rol
 
@@ -633,21 +636,7 @@ BEGIN
 END
 GO
 
---Agregar funcionalidad a Rol
-CREATE PROCEDURE BIG_DATA.agregar_funcionalidad
-	@nombreRol nvarchar(255),
-	@funcionalidad nvarchar(255)
 
-AS
-BEGIN
-	DECLARE @idRol numeric(18,0) = (select idRol from BIG_DATA.Rol r where r.rolDesc = @nombreRol)
-	DECLARE @idFuncion numeric (18,0) = (select idFuncion from BIG_DATA.Funcion f where f.funcionDesc = @funcionalidad)
-
-INSERT INTO BIG_DATA.FuncionXRol VALUES (@idRol,@idFuncion)
-
-END
-
-GO
 --Eliminacion de Rol
 
 CREATE PROCEDURE BIG_DATA.eliminar_rol
@@ -942,225 +931,49 @@ BEGIN
 END
 GO
 
---Modificar Nombre
-CREATE PROCEDURE BIG_DATA.modificar_nombre_Cliente
+--Modificar Cliente
+CREATE PROCEDURE BIG_DATA.Modificar_Cliente (
 	@nombre nvarchar(255),
-	@tipoDocumento nvarchar(255),
-	@documento numeric(18,0)
-AS
-BEGIN
-
-	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	UPDATE BIG_DATA.Cliente
-	SET nombre = @nombre
-	where tipo_Documento = @tipoDoc AND documento = @documento
-END
-GO
-
---Modificar Apellido
-CREATE PROCEDURE BIG_DATA.modificar_apellido_Cliente
 	@apellido nvarchar(255),
 	@tipoDocumento nvarchar(255),
-	@documento numeric(18,0)
-AS
-BEGIN
-	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	UPDATE BIG_DATA.Cliente
-	SET apellido = @apellido
-	where tipo_Documento = @tipoDoc AND documento = @documento
-
-END
-GO
---Modificar Tipo de identificacion
-CREATE PROCEDURE BIG_DATA.modificar_tipoDocumento_Cliente
-	@tipoDocumentoNuevo nvarchar(255),
-	@tipoDocumentoViejo nvarchar(255),
-	@documento numeric(18,0)
-AS
-BEGIN
-	DECLARE @tipoDocNuevo numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumentoNuevo)
-	DECLARE @tipoDocViejo numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumentoViejo)
-	UPDATE BIG_DATA.Cliente
-	SET tipo_Documento = @tipoDocNuevo
-	where tipo_Documento = @tipoDocViejo AND documento = @documento
-
-END
-GO
-
---Modificar Numero de documento
-CREATE PROCEDURE BIG_DATA.modificar_numeroDocumento_Cliente
-	@documentoNuevo numeric(18,0),
-	@tipoDocumento nvarchar(255),
-	@documento numeric(18,0)
-AS
-BEGIN
-DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	UPDATE BIG_DATA.Cliente
-	SET documento = @documentoNuevo
-	where tipo_Documento = @tipoDoc AND documento = @documento
-
-END
-GO
-
---Modificar Telefono
-CREATE PROCEDURE BIG_DATA.modificar_telefono_Cliente
+	@numeroDocumento numeric(18,0),
 	@telefono numeric(18,0),
-	@tipoDocumento nvarchar(255),
-	@documento numeric(18,0)
-
-AS
-BEGIN
-	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	UPDATE BIG_DATA.Cliente
-	SET telefono = @telefono
-	where tipo_Documento = @tipoDoc AND documento = @documento
-
-END
-GO
-
---Modificar Calle
-CREATE PROCEDURE BIG_DATA.modificar_calle_Cliente
 	@calle nvarchar(255),
-	@tipoDocumento nvarchar(255),
-	@documento numeric(18,0)
-AS
-BEGIN
-	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	UPDATE BIG_DATA.Cliente
-	SET calle = @calle
-	where tipo_Documento = @tipoDoc AND documento = @documento
-
-END
-GO
-
---Modificar NroCalle
-CREATE PROCEDURE BIG_DATA.modificar_numeroCalle_Cliente
 	@numero numeric(18,0),
-	@tipoDocumento nvarchar(255),
-	@documento numeric(18,0)
-AS
-BEGIN
-	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	UPDATE BIG_DATA.Cliente
-	SET numero_Calle = @numero
-	where tipo_Documento = @tipoDoc AND documento = @documento
-
-END
-GO
-
---Modificar dpto
-CREATE PROCEDURE BIG_DATA.modificar_departamento_Cliente
-	@dpto numeric(18,0),
-	@tipoDocumento nvarchar(255),
-	@documento numeric(18,0)
-AS
-BEGIN
-	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	UPDATE BIG_DATA.Cliente
-	SET departamento = @dpto
-	where tipo_Documento = @tipoDoc AND documento = @documento
-
-END
-GO
-
---Modificar piso
-CREATE PROCEDURE BIG_DATA.modificar_piso_Cliente
-	@piso numeric (18,0),
-	@tipoDocumento nvarchar(255),
-	@documento numeric(18,0)
-AS
-BEGIN
-	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	UPDATE BIG_DATA.Cliente
-	SET piso = @piso
-	where tipo_Documento = @tipoDoc AND documento = @documento
-
-END
-GO
-
---Modificar localidad
-CREATE PROCEDURE BIG_DATA.modificar_localidad_Cliente
+	@dpto nvarchar(50),
+	@piso numeric(18,0),
 	@localidad nvarchar(255),
-	@tipoDocumento numeric(18,0),
-	@documento numeric(18,0)
+	@pais nvarchar(50),
+	@fechaNacimiento datetime,
+	@nacionalidad nvarchar(50),
+	@mail nvarchar(255)
+	)
 AS
 BEGIN
-	UPDATE BIG_DATA.Cliente
-	SET localidad = @localidad
-	where tipo_Documento = @tipoDocumento AND documento = @documento
 
-END
-GO
-
-
---Modificar pais de origen
-CREATE PROCEDURE BIG_DATA.modificar_paisOrigen_Cliente
-	@pais numeric(18,0),
-	@tipoDocumento nvarchar(255),
-	@documento numeric(18,0)
-AS
-BEGIN
-	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	UPDATE BIG_DATA.Cliente
-	SET paisOrigen = @pais
-	where tipo_Documento = @tipoDoc AND documento = @documento
-
-END
-GO
-
---Modificar fecha de nacimiento
-CREATE PROCEDURE BIG_DATA.modificar_nacimiento_Cliente
-	@nacimiento datetime,
-	@tipoDocumento nvarchar(255),
-	@documento numeric(18,0)
-AS
-BEGIN
-	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	UPDATE BIG_DATA.Cliente
-	SET fecha_Nacimiento = @nacimiento
-	where tipo_Documento = @tipoDoc AND documento = @documento
-
-END
-GO
-
---Modificar nacionalidad
-CREATE PROCEDURE BIG_DATA.modificar_nacionalidad_Cliente
-	@nacionalidad numeric(18,0),
-	@tipoDocumento nvarchar(255),
-	@documento numeric(18,0)
-AS
-BEGIN
-	DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	UPDATE BIG_DATA.Cliente
-	SET nacionalidad = @nacionalidad
-	where tipo_Documento = @tipoDoc AND documento = @documento
-
-END
-GO
-
-
---Modificar Mail Cliente
-
-CREATE PROCEDURE BIG_DATA.modificar_mail_Cliente
-@tipoDocumento nvarchar(255),
-@documento numeric(18,0),
-@mail nvarchar(255)
-AS
-BEGIN
 DECLARE @tipoDoc numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDocumento)
-	BEGIN TRY
-		UPDATE BIG_DATA.Cliente
-		SET mail = @mail
-		WHERE tipo_Documento = @tipoDoc AND documento = @documento
-	END TRY
+DECLARE @paisOrigen numeric(18,0) = (SELECT idPaisNacionalidad FROM BIG_DATA.PaisNacionalidad WHERE pais = @pais)
 
-	BEGIN CATCH
-			RAISERROR('Mail invalido',16,1) --MAIL Q TIENE Q SER UNICO Y REBOTA POR EL UNIQUE DE LA TABLA
-	END CATCH
+UPDATE BIG_DATA.Cliente
+SET nombre = @nombre,
+apellido = @apellido,
+tipo_Documento = @tipoDoc,
+documento = @numeroDocumento,
+nacionalidad = @paisOrigen,
+mail = @mail,
+telefono = @telefono,
+calle = @calle,
+numero_Calle = @numero,
+piso = @piso,
+departamento = @dpto,
+localidad = @localidad,
+paisOrigen = @paisOrigen,
+fecha_Nacimiento = @fechaNacimiento
+
+WHERE tipo_Documento = @tipoDoc AND documento = @numeroDocumento
 END
-
 GO
---habilitacion/Deshabilitar Cliente
+--habilitacion/Deshabilitar Client
 
 CREATE PROCEDURE BIG_DATA.habilitacion_cliente
 	
@@ -1321,167 +1134,32 @@ ELSE
 END
 GO
 
---Modificar nombre hotel
-
-CREATE PROCEDURE BIG_DATA.modificar_nombre
-@idHotel numeric(18,0),-- O por nombre
-@nombreNuevo nvarchar(255)
-
-AS
-BEGIN
-
-UPDATE BIG_DATA.Hotel
-SET nombreHotel = @nombreNuevo
-WHERE idHotel = @idHotel
-
-END
-GO
-
---Modificar Mail Hotel
-
-CREATE PROCEDURE BIG_DATA.modificar_mail
-@idHotel numeric(18,0),-- O por nombre
-@mailNuevo nvarchar(255)
+--Modificar Hotel
+CREATE PROCEDURE BIG_DATA.Modificar_Hotel (
+	@nombre nvarchar(255),
+	@mail nvarchar(255),
+	@telefono numeric(18,0),
+	@direccion nvarchar(255),
+	@cantidadEstrellas numeric(18,0),
+	@ciudad nvarchar(255),
+	@numeroCalle numeric(18,0),
+	@pais nvarchar(50),
+	@fecha datetime,
+	@recargaEstrellas numeric(18,0)
+)
 
 AS
 BEGIN
+DECLARE @paisOrigen numeric(18,0) = (SELECT idPaisNacionalidad FROM BIG_DATA.PaisNacionalidad WHERE pais = @pais)
+DECLARE @ciudadHotel numeric(18,0) = (SELECT idCiudad FROM BIG_DATA.Ciudad WHERE  idPaisNacionalidad = @paisOrigen AND ciudadNombre = @ciudad)
 
 UPDATE BIG_DATA.Hotel
-SET mailHotel = @mailNuevo
-WHERE idHotel = @idHotel
-
+SET nombreHotel = @nombre, mailHotel = @mail, telefonoHotel = @telefono, direccionHotel = @direccion,
+cantidadDeEstrellas = @cantidadEstrellas, idCiudad = @ciudadHotel, numeroCalle = @numeroCalle, paisHotel = @paisOrigen,
+fechaDeCreacion = @fecha, recargaEstrella = @recargaEstrellas
+WHERE nombreHotel = @nombre
 END
 GO
-
---Modificar telefono hotel
-
-CREATE PROCEDURE BIG_DATA.modificar_telefono
-@idHotel numeric(18,0),-- O por nombre
-@telefonoNuevo numeric(18,0)
-
-AS
-BEGIN
-
-UPDATE BIG_DATA.Hotel
-SET telefonoHotel = @telefonoNuevo
-WHERE idHotel = @idHotel
-
-END
-GO
-
---Modificar direccion Hotel
-
-CREATE PROCEDURE BIG_DATA.modificar_direccion
-@idHotel numeric(18,0),-- O por nombre
-@direccionNuevo nvarchar(255)
-
-AS
-BEGIN
-
-UPDATE BIG_DATA.Hotel
-SET direccionHotel = @direccionNuevo
-WHERE idHotel = @idHotel
-
-END
-GO
-
---Modificar cantidadEstrellas
-
-CREATE PROCEDURE BIG_DATA.modificar_cantidad_estrellas
-@idHotel numeric(18,0),-- O por nombre
-@cantidadNueva numeric (18,0)
-
-AS
-BEGIN
-
-UPDATE BIG_DATA.Hotel
-SET cantidadDeEstrellas = @cantidadNueva
-WHERE idHotel = @idHotel
-
-END
-GO
-
---Modificar ciudad
-
-CREATE PROCEDURE BIG_DATA.modificar_ciudad
-@idHotel numeric(18,0),-- O por nombre
-@idCiudad numeric (18,0)
-
-AS
-BEGIN
-
-UPDATE BIG_DATA.Hotel
-SET idCiudad = @idCiudad
-WHERE idHotel = @idHotel
-
-END
-GO
-
---Modificar numero calle
-
-CREATE PROCEDURE BIG_DATA.modificar_numero_calle
-@idHotel numeric(18,0),-- O por nombre
-@numero numeric(18,0)
-
-AS
-BEGIN
-
-UPDATE BIG_DATA.Hotel
-SET numeroCalle = @numero
-WHERE idHotel = @idHotel
-
-END
-GO
-
---Modificar pais hotel
-
-CREATE PROCEDURE BIG_DATA.modificar_pais
-@idHotel numeric(18,0),-- O por nombre
-@pais numeric (18,0)
-
-AS
-BEGIN
-
-UPDATE BIG_DATA.Hotel
-SET paisHotel = @pais
-WHERE idHotel = @idHotel
-
-END
-GO
-
---MOficair fecha creacion
-
-CREATE PROCEDURE BIG_DATA.modificar_fecha
-@idHotel numeric(18,0),-- O por nombre
-@fecha datetime
-
-AS
-BEGIN
-
-UPDATE BIG_DATA.Hotel
-SET fechaDeCreacion = @fecha
-WHERE idHotel = @idHotel
-
-END
-GO
-
---modificar recargaEstrellas
-
-CREATE PROCEDURE BIG_DATA.modificar_rearga
-@idHotel numeric(18,0),-- O por nombre
-@recarga numeric(18,0)
-
-AS
-BEGIN
-
-UPDATE BIG_DATA.Hotel
-SET recargaEstrella = @recarga
-WHERE idHotel = @idHotel
-
-END
-GO
-
-
 --quitar regimen hotel
 
 CREATE PROCEDURE BIG_DATA.quitar_regimen_hotel
