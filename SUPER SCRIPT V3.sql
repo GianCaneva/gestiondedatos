@@ -113,7 +113,7 @@ CREATE TABLE BIG_DATA.TipoDocumento (
 CREATE TABLE BIG_DATA.Rol (
 	idRol NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
 	rolDesc NVARCHAR (255),
-	estadoRol BIT,
+	estadoRol BIT DEFAULT 1,
 
 	PRIMARY KEY (idRol)
 )
@@ -530,7 +530,6 @@ INSERT INTO [BIG_DATA].[Usuario] (username,nombre,apellido,tipo_Documento,docume
 		FROM [BIG_DATA].[Hotel] h,[gd_esquema].[Maestra] m, BIG_DATA.Regimen r, [BIG_DATA].[Ciudad] c
 		WHERE(direccionHotel=Hotel_Calle AND c.ciudadNombre=Hotel_Ciudad AND numeroCalle=Hotel_Nro_Calle) 
 
-
 --Adicion Valores Tabla UsuarioXHotel
 	INSERT INTO [BIG_DATA].[UsuarioXHotel]
 		SELECT idHotel,username
@@ -702,12 +701,9 @@ BEGIN
 			INSERT INTO BIG_DATA.Usuario (username,userpassword,nombre,apellido,tipo_Documento,documento,mail,telefono,direccion,fecha_Nacimiento)
 	VALUES (@Username,@passwordEncriptada,@Nombre,@Apellido,@TipoDocumento,@Nrodocumento,@Mail,@Teléfono,@Dirección,@FechaNacimiento)
 
-	select * from BIG_DATA.Usuario
-
 	INSERT INTO [BIG_DATA].[UsuarioXRol] (username,idRol) VALUES (@Username,@Rol)
 
 	INSERT INTO [BIG_DATA].[UsuarioXHotel] (idHotel,username) VALUES (@Hotel,@Username)
-
 
 
 	END TRY
@@ -718,8 +714,10 @@ BEGIN
 END
 
 GO
---Crear Guest/Cliente
 
+
+--Crear Guest/Cliente
+/*
 CREATE PROCEDURE BIG_DATA.crear_usuario_guest
 	@Username nvarchar(255),
 	@Password nvarchar(20),
@@ -748,6 +746,7 @@ BEGIN
 END
 
 GO
+*/
 
 --Modificar Password Usuario
 
@@ -1294,5 +1293,81 @@ ELSE
 UPDATE BIG_DATA.Reserva
 SET idEstadoReserva = @estadoReserva
 END
+END
+GO
+
+
+--Registrar Reserva
+CREATE PROCEDURE BIG_DATA.Registrar_Reserva
+
+
+	@FechaDesde datetime,
+	@FechaHasta datetime,
+	@tipoHabitacion numeric(18,0),
+	@regimen numeric(18,0)
+
+	AS
+	BEGIN
+
+	if @regimen IS NULL
+
+	BEGIN
+
+	
+		SELECT h.nombreHotel, hab.numeroHab, r.descripcion AS REGIMEN, CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio)) as 'Precio por Noche', CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio * ABS(DATEDIFF(day,@fechaHasta,@FechaDesde)))) as 'Precio Total'
+		from big_data.habitacion hab,big_data.hotel h,big_data.TipoHabitacion th,BIG_DATA.regimen r,big_data.RegimenXHotel rxh 
+		WHERE idHabitacion not in
+		(select idHabitacion from big_data.reserva where 
+		(@FechaDesde BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
+		(@FechaHasta BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
+		(@FechaDesde <= fecha_Reserva_Desde AND @FechaHasta >= fecha_Reserva_Hasta)
+		)
+		AND h.idHotel not in
+		(select idHotel from big_data.CierreHotel where
+		(@FechaDesde BETWEEN fecha_Inicio AND fecha_Fin) OR 
+		(@FechaHasta BETWEEN fecha_Inicio AND fecha_Fin) OR 
+		(@FechaDesde <= fecha_Inicio AND @FechaHasta >= fecha_Fin)
+		)
+		AND
+		idTipo = @tipoHabitacion
+	
+		AND hab.idHotel = h.idHotel
+		AND hab.idTipo = th.idTipoHabitacion
+		AND hab.idHotel = rxh.idHotel
+		AND rxh.idRegimen = r.idRegimen
+		AND hab.habitacionActiva = 1
+
+	END
+
+	ELSE
+
+	BEGIN
+
+		SELECT h.nombreHotel, hab.numeroHab, r.descripcion AS REGIMEN, CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio)) as 'Precio por Noche', CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio * ABS(DATEDIFF(day,@fechaHasta,@FechaDesde)))) as 'Precio Total'
+		from big_data.habitacion hab,big_data.hotel h,big_data.TipoHabitacion th,BIG_DATA.regimen r,big_data.RegimenXHotel rxh 
+		WHERE idHabitacion not in
+		(select idHabitacion from big_data.reserva where 
+		(@FechaDesde BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
+		(@FechaHasta BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
+		(@FechaDesde <= fecha_Reserva_Desde AND @FechaHasta >= fecha_Reserva_Hasta)
+		)
+		AND h.idHotel not in
+		(select idHotel from big_data.CierreHotel where
+		(@FechaDesde BETWEEN fecha_Inicio AND fecha_Fin) OR 
+		(@FechaHasta BETWEEN fecha_Inicio AND fecha_Fin) OR 
+		(@FechaDesde <= fecha_Inicio AND @FechaHasta >= fecha_Fin)
+		)
+				
+		AND
+		idTipo = @tipoHabitacion
+		AND hab.idHotel = h.idHotel
+		AND hab.idTipo = th.idTipoHabitacion
+		AND hab.idHotel = rxh.idHotel
+		AND rxh.idRegimen = r.idRegimen
+		AND rxh.idRegimenHotel = @regimen
+		AND hab.habitacionActiva = 1
+		AND hab.idHotel in (select idHotel from big_data.RegimenXHotel where idRegimen = @regimen)
+
+	END
 END
 GO
