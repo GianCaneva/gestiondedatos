@@ -460,6 +460,9 @@ INSERT INTO [BIG_DATA].[Usuario] (username,nombre,apellido,tipo_Documento,docume
 				AND Hotel_Ciudad = ciudadNombre
 		GROUP BY idCiudad,Hotel_Calle,Hotel_Nro_Calle,Hotel_CantEstrella,Hotel_Recarga_Estrella,idPaisNacionalidad
 
+		UPDATE Big_data.hotel set nombreHotel = 'Hotel ' + convert(nvarchar,idHotel) FROM [BIG_DATA].[Hotel] --Hardcodeo de nombres hoteles
+
+	
 --Migracion Tabla Cliente
 	INSERT INTO [BIG_DATA].[Cliente] (documento,tipo_Documento,apellido,nombre,fecha_Nacimiento,mail,calle,numero_Calle,piso,departamento,nacionalidad)
 		SELECT DISTINCT Cliente_Pasaporte_Nro,t.idDocumento,Cliente_Apellido,Cliente_Nombre,Cliente_Fecha_Nac,Cliente_Mail,Cliente_Dom_Calle,Cliente_Nro_Calle,Cliente_Piso,Cliente_Depto,n.idPaisNacionalidad
@@ -1300,7 +1303,7 @@ GO
 --Registrar Reserva
 CREATE PROCEDURE BIG_DATA.Registrar_Reserva
 
-
+	@HotelId numeric(18,0),
 	@FechaDesde datetime,
 	@FechaHasta datetime,
 	@tipoHabitacion numeric(18,0),
@@ -1314,7 +1317,7 @@ CREATE PROCEDURE BIG_DATA.Registrar_Reserva
 	BEGIN
 
 	
-		SELECT h.nombreHotel, hab.numeroHab, r.descripcion AS REGIMEN, CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio)) as 'Precio por Noche', CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio * ABS(DATEDIFF(day,@fechaHasta,@FechaDesde)))) as 'Precio Total'
+		SELECT distinct h.nombreHotel,r.descripcion AS REGIMEN, CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio)) as 'Precio por Noche', CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio * ABS(DATEDIFF(day,@fechaHasta,@FechaDesde)))) as 'Precio Total'
 		from big_data.habitacion hab,big_data.hotel h,big_data.TipoHabitacion th,BIG_DATA.regimen r,big_data.RegimenXHotel rxh 
 		WHERE idHabitacion not in
 		(select idHabitacion from big_data.reserva where 
@@ -1336,6 +1339,7 @@ CREATE PROCEDURE BIG_DATA.Registrar_Reserva
 		AND hab.idHotel = rxh.idHotel
 		AND rxh.idRegimen = r.idRegimen
 		AND hab.habitacionActiva = 1
+		AND h.idHotel = @HotelId
 
 	END
 
@@ -1343,7 +1347,8 @@ CREATE PROCEDURE BIG_DATA.Registrar_Reserva
 
 	BEGIN
 
-		SELECT h.nombreHotel, hab.numeroHab, r.descripcion AS REGIMEN, CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio)) as 'Precio por Noche', CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio * ABS(DATEDIFF(day,@fechaHasta,@FechaDesde)))) as 'Precio Total'
+	
+		SELECT distinct h.nombreHotel, r.descripcion AS REGIMEN, CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio)) as 'Precio por Noche', CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio * ABS(DATEDIFF(day,@fechaHasta,@FechaDesde)))) as 'Precio Total'
 		from big_data.habitacion hab,big_data.hotel h,big_data.TipoHabitacion th,BIG_DATA.regimen r,big_data.RegimenXHotel rxh 
 		WHERE idHabitacion not in
 		(select idHabitacion from big_data.reserva where 
@@ -1351,6 +1356,7 @@ CREATE PROCEDURE BIG_DATA.Registrar_Reserva
 		(@FechaHasta BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
 		(@FechaDesde <= fecha_Reserva_Desde AND @FechaHasta >= fecha_Reserva_Hasta)
 		)
+
 		AND h.idHotel not in
 		(select idHotel from big_data.CierreHotel where
 		(@FechaDesde BETWEEN fecha_Inicio AND fecha_Fin) OR 
@@ -1366,8 +1372,138 @@ CREATE PROCEDURE BIG_DATA.Registrar_Reserva
 		AND rxh.idRegimen = r.idRegimen
 		AND rxh.idRegimenHotel = @regimen
 		AND hab.habitacionActiva = 1
-		AND hab.idHotel in (select idHotel from big_data.RegimenXHotel where idRegimen = @regimen)
+		AND rxh.idRegimen = @regimen
+		AND h.idHotel = @HotelId
+
+
 
 	END
+
 END
 GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--Listado Estadistico
+
+--Hoteles con mayor cantidad de reservas canceladas.
+CREATE PROCEDURE BIG_DATA.Hoteles_Max_Reservas
+
+	@FechaDesde datetime,
+	@FechaHasta datetime
+
+	AS 
+	BEGIN
+
+select top 5 h.nombreHotel, Count(r.idEstadoReserva) as 'Cantidad Reservas Canceladas' from big_data.Reserva r inner join big_data.Hotel h on (h.idHotel=r.idHotel)
+where idEstadoReserva in (3,4,5)
+and
+(@FechaDesde BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
+		(@FechaHasta BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
+		(@FechaDesde <= fecha_Reserva_Desde AND @FechaHasta >= fecha_Reserva_Hasta)
+		
+Group By h.nombreHotel
+Order by 2 Desc
+
+END
+GO
+
+
+
+
+
+
+
+--Hoteles con mayor cantidad de consumibles facturados
+CREATE PROCEDURE BIG_DATA.Hoteles_Max_Consumibles
+
+	@FechaDesde datetime,
+	@FechaHasta datetime
+
+	AS 
+	BEGIN
+
+select top 5 h.nombreHotel,count(c.idConsumible) as 'Cantidad Consumibles Adquiridos' from big_data.hotel h, big_data.ConsumibleXEstadia ce, big_data.Estadia e, big_data.Reserva r, big_data.consumible c
+
+where
+ce.idEstadia = e.idEstadia
+and e.idReserva = r.idReserva
+and r.idHotel = h.idhotel
+and
+(@FechaDesde BETWEEN fecha_Check_In AND fecha_Check_Out) OR 
+		(@FechaHasta BETWEEN fecha_Check_In AND fecha_Check_Out) OR 
+		(@FechaDesde <= fecha_Check_In AND @FechaHasta >= fecha_Check_Out)
+
+group by h.nombreHotel
+Order by 2 Desc
+
+END
+GO
+
+--Hoteles con mayor cantidad de días fuera de servicio.
+CREATE PROCEDURE BIG_DATA.Hoteles_Max_FueraDeServicio
+	@FechaDesde datetime,
+	@FechaHasta datetime
+
+AS 
+BEGIN
+
+select top 5 h.nombreHotel,count(ch.idHotel) as 'Cantidad de Cierres' from BIG_DATA.hotel h, BIG_DATA.CierreHotel ch
+where ch.idHotel=h.idHotel
+and
+(@FechaDesde BETWEEN fecha_inicio AND fecha_Fin) OR 
+		(@FechaHasta BETWEEN fecha_inicio AND fecha_Fin) OR 
+		(@FechaDesde <= fecha_inicio AND @FechaHasta >= fecha_Fin)
+group by h.nombreHotel
+Order by 2 Desc
+
+END
+GO
+
+
+
+--Habitaciones con mayor cantidad de días y veces que fueron ocupadas, informando a demás a que hotel perteneces
+CREATE PROCEDURE BIG_DATA.Habitaciones_Stats
+	@FechaDesde datetime,
+	@FechaHasta datetime
+
+	AS 
+	BEGIN
+
+select distinct top 5 hab.numeroHab, h.nombreHotel,  sum(r.cantidadNoches) as 'Cantidad de dias ocupada', count( r.idHabitacion) as 'Cantidad de veces Ocupada' from big_data.reserva r, big_data.Hotel h, big_data.Habitacion hab
+where h.idHotel=r.idHotel
+and hab.idHabitacion = r.idHabitacion
+AND
+(@FechaDesde BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
+		(@FechaHasta BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
+		(@FechaDesde <= fecha_Reserva_Desde AND @FechaHasta >= fecha_Reserva_Hasta)
+group by h.nombreHotel,hab.numeroHab
+order by 3 DESC ,4 desc
+
+END
+GO
+
