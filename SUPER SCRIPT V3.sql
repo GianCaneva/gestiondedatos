@@ -1508,3 +1508,49 @@ order by 3 DESC ,4 desc
 END
 GO
 
+--Cliente con mayor cantidad de puntos
+
+CREATE PROCEDURE BIG_DATA.PuntosClientes
+	@fechaDesde datetime,
+	@fechaHasta datetime
+AS
+BEGIN
+IF OBJECT_ID('dbo.#PuntosCliente') IS NOT NULL
+	BEGIN
+		DROP TABLE #PuntosCliente
+	END
+CREATE TABLE #PuntosCliente (idCliente numeric(18,0), puntosTotales numeric(18,0))
+
+DECLARE  @idCliente numeric(18,0), @puntosTotales numeric(18,0)
+
+DECLARE cursorPrecio CURSOR FOR SELECT c.idCliente, (CONVERT(NUMERIC(18,0),(th.precio * recargaEstrella * reg.precio * ABS(DATEDIFF(day,fecha_Reserva_Hasta,fecha_Reserva_Desde)))) / 20)+
+(CONVERT(NUMERIC(18,0),(SUM(cons.consumiblePrecio))) / 10) AS 'Puntos Totales'
+FROM
+ BIG_DATA.CLiente c JOIN BIG_DATA.Factura f on (c.idCliente = f.idCliente)
+JOIN BIG_DATA.ITEM i ON (f.idFactura = i.idFactura)
+JOIN BIG_DATA.estadia e ON (i.idEstadia = e.idEstadia)
+JOIN BIG_DATA.RESERVA r ON (e.idReserva = r.idReserva)
+JOIN BIG_DATA.HOTEL h ON (r.idHotel = h.idHotel)
+JOIN BIG_DATA.TIPOHABITACION th ON (r.idTipoHabitacion = th.idTipoHabitacion)
+JOIN BIG_DATA.REGIMENXHOTEL rh ON (r.idRegimen = rh.idRegimen)
+JOIN BIG_DATA.REGIMEN reg ON (rh.idRegimen = reg.idRegimen)
+JOIN BIG_DATA.ConsumibleXEstadia ce ON (e.idEstadia = ce.idEstadia)
+JOIN BIG_DATA.Consumible cons ON (ce.idConsumible = cons.idConsumible)
+WHERE fecha_Reserva_Hasta BETWEEN @fechaDesde AND @fechaHasta
+GROUP BY c.idCliente, th.precio, recargaEstrella, reg.precio, fecha_Reserva_Desde, fecha_Reserva_Hasta
+OPEN cursorPrecio
+
+FETCH NEXT FROM cursorPrecio INTO @idCliente, @puntosTotales
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+
+INSERT INTO #PuntosCliente VALUES(@idCliente, @puntosTotales)
+FETCH NEXT FROM cursorPrecio INTO @idCliente, @puntosTotales
+END
+
+CLOSE cursorPrecio
+DEALLOCATE cursorPrecio
+SELECT TOP 5 * from #PuntosCliente ORDER BY puntosTotales
+END
+GO
