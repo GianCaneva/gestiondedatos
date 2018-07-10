@@ -1554,3 +1554,99 @@ DEALLOCATE cursorPrecio
 SELECT TOP 5 * from #PuntosCliente ORDER BY puntosTotales
 END
 GO
+
+
+--Registrar Consumible (El neteado de los consumibles en caso de all inclusive creo que conviene hacerlo al momento de facturar, no ahora)
+
+CREATE PROCEDURE BIG_DATA.RegistrarConsumible (
+	@idReserva numeric(18,0),
+	@consumible varchar(255)
+)
+AS
+BEGIN
+
+DECLARE @idEstadia numeric(18,0) =  (SELECT idEstadia FROM BIG_DATA.Estadia WHERE idReserva = @idReserva)
+DECLARE @idConsumible numeric(18,0) = (SELECT idConsumible FROM BIG_DATA.Consumible WHERE consumibleDesc = @consumible)
+
+BEGIN TRY
+INSERT INTO BIG_DATA.ConsumibleXEstadia VALUES (@idEstadia,@idConsumible)
+END TRY
+
+BEGIN CATCH RAISERROR('Error al cargar consumible',16,1) END CATCH
+
+END
+GO
+
+--Quitar consumible
+CREATE PROCEDURE BIG_DATA.QuitarConsumible (
+	@idReserva numeric(18,0),
+	@consumible varchar(255)
+)
+AS
+BEGIN
+
+DECLARE @idEstadia numeric(18,0) =  (SELECT idEstadia FROM BIG_DATA.Estadia WHERE idReserva = @idReserva)
+DECLARE @idConsumible numeric(18,0) = (SELECT idConsumible FROM BIG_DATA.Consumible WHERE consumibleDesc = @consumible)
+
+BEGIN TRY
+DELETE FROM BIG_DATA.ConsumibleXEstadia 
+WHERE idEstadia = @idEstadia AND idConsumible = @idConsumible
+END TRY
+
+BEGIN CATCH
+RAISERROR('Error al quitar consumible',16,1)
+END CATCH
+
+END
+GO
+
+
+--Facturacion
+
+CREATE PROCEDURE BIG_DATA.crear_factura
+	@nroFactura numeric(18,0),
+	@fecha datetime,
+	@total numeric(18,2),
+	@tipoDoc nvarchar(255),
+	@numeroDoc numeric(18,0),
+	@idFactura numeric(18,0) OUTPUT
+AS
+BEGIN
+	
+	DECLARE @tipoDocumento numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDoc)
+	DECLARE @idCliente numeric(18,0) = (SELECT idCliente FROM BIG_DATA.Cliente WHERE tipo_Documento = @tipoDocumento AND documento = @numeroDoc)
+	INSERT INTO BIG_DATA.Factura
+		(numero, fecha, total,  idCliente)
+	VALUES
+		(@nroFactura, @fecha, @total, @idCliente)
+	SET @idFactura = SCOPE_IDENTITY();
+END
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
