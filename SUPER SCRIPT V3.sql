@@ -1421,10 +1421,10 @@ CREATE PROCEDURE BIG_DATA.Hoteles_Max_Reservas
 
 select top 5 h.nombreHotel, Count(r.idEstadoReserva) as 'Cantidad Reservas Canceladas' from big_data.Reserva r inner join big_data.Hotel h on (h.idHotel=r.idHotel)
 where idEstadoReserva in (3,4,5)
-and
+and (
 (@FechaDesde BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
 		(@FechaHasta BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
-		(@FechaDesde <= fecha_Reserva_Desde AND @FechaHasta >= fecha_Reserva_Hasta)
+		(@FechaDesde <= fecha_Reserva_Desde AND @FechaHasta >= fecha_Reserva_Hasta))
 		
 Group By h.nombreHotel
 Order by 2 Desc
@@ -1454,9 +1454,10 @@ ce.idEstadia = e.idEstadia
 and e.idReserva = r.idReserva
 and r.idHotel = h.idhotel
 and
+(
 (@FechaDesde BETWEEN fecha_Check_In AND fecha_Check_Out) OR 
 		(@FechaHasta BETWEEN fecha_Check_In AND fecha_Check_Out) OR 
-		(@FechaDesde <= fecha_Check_In AND @FechaHasta >= fecha_Check_Out)
+		(@FechaDesde <= fecha_Check_In AND @FechaHasta >= fecha_Check_Out))
 
 group by h.nombreHotel
 Order by 2 Desc
@@ -1474,10 +1475,10 @@ BEGIN
 
 select top 5 h.nombreHotel,count(ch.idHotel) as 'Cantidad de Cierres' from BIG_DATA.hotel h, BIG_DATA.CierreHotel ch
 where ch.idHotel=h.idHotel
-and
+and(
 (@FechaDesde BETWEEN fecha_inicio AND fecha_Fin) OR 
 		(@FechaHasta BETWEEN fecha_inicio AND fecha_Fin) OR 
-		(@FechaDesde <= fecha_inicio AND @FechaHasta >= fecha_Fin)
+		(@FechaDesde <= fecha_inicio AND @FechaHasta >= fecha_Fin))
 group by h.nombreHotel
 Order by 2 Desc
 
@@ -1497,10 +1498,10 @@ CREATE PROCEDURE BIG_DATA.Habitaciones_Stats
 select distinct top 5 hab.numeroHab, h.nombreHotel,  sum(r.cantidadNoches) as 'Cantidad de dias ocupada', count( r.idHabitacion) as 'Cantidad de veces Ocupada' from big_data.reserva r, big_data.Hotel h, big_data.Habitacion hab
 where h.idHotel=r.idHotel
 and hab.idHabitacion = r.idHabitacion
-AND
+AND(
 (@FechaDesde BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
 		(@FechaHasta BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
-		(@FechaDesde <= fecha_Reserva_Desde AND @FechaHasta >= fecha_Reserva_Hasta)
+		(@FechaDesde <= fecha_Reserva_Desde AND @FechaHasta >= fecha_Reserva_Hasta))
 group by h.nombreHotel,hab.numeroHab
 order by 3 DESC ,4 desc
 
