@@ -1383,31 +1383,6 @@ END
 GO
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 --Listado Estadistico
 
 --Hoteles con mayor cantidad de reservas canceladas.
