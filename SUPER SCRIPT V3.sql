@@ -1590,6 +1590,10 @@ BEGIN
 	
 	DECLARE @tipoDocumento numeric(18,0) = (SELECT idDocumento FROM BIG_DATA.TipoDocumento WHERE tipoDocumentoDesc = @tipoDoc)
 	DECLARE @idCliente numeric(18,0) = (SELECT idCliente FROM BIG_DATA.Cliente WHERE tipo_Documento = @tipoDocumento AND documento = @numeroDoc)
+	
+
+
+
 	INSERT INTO BIG_DATA.Factura
 		(numero, fecha, total,  idCliente)
 	VALUES
@@ -1598,9 +1602,48 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE BIG_DATA.crear_items_Factura
+	@id_factura numeric(18,0),
+	@idEstadia numeric (18,0),
+	@idItem numeric(18,0) OUTPUT
+AS
+BEGIN
+DECLARE @cantidad numeric(18,0), @monto money
+DECLARE cursorItem CURSOR FOR
+	SELECT COUNT(ce.idConsumible), SUM(consumiblePrecio)
+	FROM BIG_DATA.ConsumibleXEstadia ce JOIN BIG_DATA.Consumible c ON (ce.idConsumible = c.idConsumible AND ce.idEstadia = @idEstadia)
+OPEN cursorItem
+FETCH NEXT FROM cursorItem INTO @cantidad, @monto
 
+WHILE @@FETCH_STATUS = 0
+BEGIN
+	INSERT INTO BIG_DATA.Item
+		(idFactura, cantidad,monto,idEstadia)
+	VALUES
+		(@id_Factura, @cantidad, @monto, @idEstadia)
+	SET @idItem = SCOPE_IDENTITY();
 
+FETCH NEXT FROM cursorItem INTO @cantidad, @monto
 
+END
+CLOSE cursorItem
+DEALLOCATE cursorItem
+END
+GO
+
+/*
+CREATE PROCEDURE BIG_DATA.GenerarFactura (@idFactura numeric (18,0), @idEstadia numeric(18,0))
+
+AS
+BEGIN
+
+SELECT idItem,f.numero, i.cantidad, i.monto , SUM(i.cantidad*i.monto) TotalItem
+FROM BIG_DATA.Factura f JOIN BIG_DATA.Item i ON (f.idFactura = i.idFactura) 
+WHERE (i.idFactura = @idFactura AND idEstadia = @idEstadia)
+
+END
+GO
+ESTO IMPRIME A MODELO FACTURA TODOS LOS ITEMS DE LA FACTURA*/
 
 
 
