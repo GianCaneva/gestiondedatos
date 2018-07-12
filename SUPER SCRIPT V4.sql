@@ -79,7 +79,7 @@ END
 CREATE TABLE BIG_DATA.Regimen (
 	idRegimen NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
 	descripcion NVARCHAR (255) NOT NULL,
-	precio MONEY,
+	precio NUMERIC (18,2),
 	estado BIT DEFAULT 1,
 	
 	PRIMARY KEY (idRegimen)
@@ -280,7 +280,7 @@ CREATE TABLE BIG_DATA.Factura (
 	idFactura NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
 	numero NUMERIC (18,0),
 	fecha DATETIME,
-	total MONEY,
+	total NUMERIC (18,2),
 	idCliente NUMERIC (18,0),
 
 	PRIMARY KEY (idFactura),
@@ -291,7 +291,7 @@ CREATE TABLE BIG_DATA.Item (
 	idItem NUMERIC (18,0) IDENTITY (1,1) NOT NULL,
 	idFactura NUMERIC (18,0),
 	cantidad NUMERIC (18,0),
-	monto MONEY,
+	monto NUMERIC (18,2),
 	idEstadia NUMERIC (18,0),
 
 	PRIMARY KEY (idItem),
