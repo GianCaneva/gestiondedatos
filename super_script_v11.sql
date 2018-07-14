@@ -575,7 +575,7 @@ INSERT INTO [BIG_DATA].[Usuario] (username,nombre,apellido,tipo_Documento,docume
 
 --Adicion Valores Tabla ConsumiblesXEstadia
 	INSERT INTO [BIG_DATA].[ConsumibleXEstadia]
-		SELECT e.idEstadia,c.idConsumible
+		SELECT e.idEstadia,c.idConsumible,1
 		FROM [BIG_DATA].[Consumible] c,[BIG_DATA].[Estadia] e,[gd_esquema].[Maestra] m,BIG_DATA.Reserva r
 		WHERE (m.Consumible_Codigo=c.idConsumible) AND (m.Reserva_Codigo = r.idReserva  and
 		e.idReserva = r.idReserva and m.Factura_Nro IS NOT NULL)
@@ -1415,6 +1415,7 @@ begin
 	
 
 end
+GO
 
 
 --Muestra para los filtros aplicados cuales son las habitaciones disponibles y los precios.
