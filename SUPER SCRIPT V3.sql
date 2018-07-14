@@ -1646,10 +1646,43 @@ GO
 ESTO IMPRIME A MODELO FACTURA TODOS LOS ITEMS DE LA FACTURA*/
 
 
+--Generar Estadia
+
+CREATE PROCEDURE BIG_DATA.Ingresar_Check_In (@idReserva numeric (18,0))
+AS
+BEGIN
+IF NOT EXISTS (SELECT 1 FROM BIG_DATA.Reserva WHERE idReserva = @idReserva)
+	BEGIN
+		RAISERROR('La reserva no existe',16,1)
+	END
+	
+ELSE IF ((SELECT fecha_Reserva_Desde FROM BIG_DATA.Reserva WHERE idReserva = @idReserva) = GETDATE())
+	BEGIN
+	INSERT INTO BIG_DATA.Estadia(idReserva,fecha_Check_In) VALUES (@idReserva,GETDATE())
+
+	END
+ELSE
+	BEGIN
+	RAISERROR('La reserva quedo sin validez',16,1)
+	END
+
+END
+GO
+
+CREATE PROCEDURE BIG_DATA.Ingresar_Check_Out (@idReserva numeric(18,0))
+AS
+BEGIN
+
+DECLARE @fechaIn datetime = (SELECT fecha_Check_In FROM BIG_DATA.Estadia WHERE idReserva = @idReserva)
+DECLARE @cantidadDias numeric (18,0) = (CAST(DATEDIFF(day,@fechaIn,GETDATE()) AS numeric(18,0)))
 
 
+UPDATE BIG_DATA.Estadia
+SET fecha_Check_Out = GETDATE(), cantidadDias = @cantidadDias
+WHERE idReserva = @idReserva
 
-
+END
+GO
 
 
 
