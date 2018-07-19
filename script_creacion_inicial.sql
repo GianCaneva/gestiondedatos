@@ -79,6 +79,7 @@ BEGIN
 END
 
 
+
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
@@ -1384,7 +1385,7 @@ CREATE PROCEDURE [BIG_DATA].Modificar_Reserva
 as
 begin
 	
-	if (select count(*) from [BIG_DATA].[Reserva] r where r.idRegimen=@NumeroReserva)=0
+	if (select count(*) from [BIG_DATA].[Reserva] r where r.idReserva=@NumeroReserva)=0
 	begin
 		raiserror('No existe el numero de reserva al cual intenta acceder',16,1);
 		return
@@ -1416,11 +1417,24 @@ CREATE PROCEDURE BIG_DATA.Registrar_Reserva
 	AS
 	BEGIN
 
+
+	IF OBJECT_ID('BIG_DATA.#tmpReserva', 'U') IS NOT NULL
+  DROP TABLE BIG_DATA.#tmpReserva; 
+
+  create table #tmpReserva
+(    nombreHotel nVarchar(255), 
+    HABITACION numeric(18,0) ,
+    REGIMEN nVarchar(255), 
+	PrecioPorNoche Numeric(16,2),
+	TOTAL Numeric(16,2)
+	 )  
+  
+
 	if @regimen IS NULL
 
 	BEGIN
 
-	
+		insert into BIG_DATA.#tmpReserva
 		SELECT distinct h.nombreHotel, hab.numeroHab as HABITACION, r.descripcion AS REGIMEN, CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio)) as 'Precio por Noche', CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio * ABS(DATEDIFF(day,@fechaHasta,@FechaDesde)))) as 'TOTAL'
 		from big_data.habitacion hab,big_data.hotel h,big_data.TipoHabitacion th,BIG_DATA.regimen r,big_data.RegimenXHotel rxh--,BIG_DATA.Reserva res
 		WHERE idHabitacion not in
@@ -1444,18 +1458,48 @@ CREATE PROCEDURE BIG_DATA.Registrar_Reserva
 		AND rxh.idRegimen = r.idRegimen
 		AND hab.habitacionActiva = 1
 		AND h.idHotel = @HotelId
-		--OR (hab.idHabitacion=Re.idHabitacion AND res.idEstadoReserva in(3,4,5))
+		
 
-	END
+		--para Reservas Canceladas
+
+		insert into #tmpReserva
+		Select distinct  h.nombreHotel,hab.numeroHab as HABITACION, r.descripcion AS REGIMEN, CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio)) as 'Precio por Noche', CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio * ABS(DATEDIFF(day,@fechaHasta,@FechaDesde)))) as 'TOTAL'
+		from big_data.habitacion hab,big_data.hotel h,big_data.TipoHabitacion th,BIG_DATA.regimen r,big_data.RegimenXHotel rxh,BIG_DATA.Reserva res
+
+		where h.idHotel = res.idHotel
+		and res.idHotel = @HotelId
+		and hab.idHotel = @HotelId
+		and res.idTipoHabitacion = @tipoHabitacion
+		AND hab.idTipo = th.idTipoHabitacion
+
+			AND hab.idHotel = rxh.idHotel
+		AND rxh.idRegimen = r.idRegimen
+		and res.idRegimen = r.idRegimen
+
+		and res.idHabitacion = hab.idHabitacion
+
+		AND
+		(
+			(@FechaDesde = fecha_Reserva_Desde AND @fechaHasta = fecha_Reserva_Hasta) OR 
+			(@FechaDesde >= fecha_Reserva_Desde AND @fechaHasta <= fecha_Reserva_Hasta)
+		)
+
+		AND idEstadoReserva in (3,4,5)
+
+		AND		idTipo = @tipoHabitacion
+
+
+
+		END
 
 	ELSE
 
 	BEGIN
 
-	
+		insert into BIG_DATA.#tmpReserva
 		SELECT distinct h.nombreHotel,hab.numeroHab as HABITACION, r.descripcion AS REGIMEN, CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio)) as 'Precio por Noche', CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio * ABS(DATEDIFF(day,@fechaHasta,@FechaDesde)))) as 'TOTAL'
-		from big_data.habitacion hab,big_data.hotel h,big_data.TipoHabitacion th,BIG_DATA.regimen r,big_data.RegimenXHotel rxh 
-		WHERE idHabitacion not in
+				from big_data.habitacion hab,big_data.hotel h,big_data.TipoHabitacion th,BIG_DATA.regimen r,big_data.RegimenXHotel rxh 
+				WHERE idHabitacion not in
 		(select idHabitacion from big_data.reserva where 
 		(@FechaDesde BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
 		(@FechaHasta BETWEEN fecha_Reserva_Desde AND fecha_Reserva_Hasta) OR 
@@ -1480,10 +1524,42 @@ CREATE PROCEDURE BIG_DATA.Registrar_Reserva
 		AND rxh.idRegimen = @regimen
 		AND h.idHotel = @HotelId
 
+
+		--Para Reservas Canceladas
+
+				insert into #tmpReserva
+		Select distinct  h.nombreHotel,hab.numeroHab as HABITACION, r.descripcion AS REGIMEN, CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio)) as 'Precio por Noche', CONVERT(NUMERIC(16,2),(th.precio * recargaEstrella * r.precio * ABS(DATEDIFF(day,@fechaHasta,@FechaDesde)))) as 'TOTAL'
+		from big_data.habitacion hab,big_data.hotel h,big_data.TipoHabitacion th,BIG_DATA.regimen r,big_data.RegimenXHotel rxh,BIG_DATA.Reserva res
+
+		where h.idHotel = res.idHotel
+		and res.idHotel = @HotelId
+		and hab.idHotel = @HotelId
+		and res.idTipoHabitacion = @tipoHabitacion
+		AND hab.idTipo = th.idTipoHabitacion
+
+			AND hab.idHotel = rxh.idHotel
+		AND rxh.idRegimen = r.idRegimen
+		and res.idRegimen = r.idRegimen
+		and res.idRegimen = @regimen
+
+		and res.idHabitacion = hab.idHabitacion
+
+		AND
+		(
+			(@FechaDesde = fecha_Reserva_Desde AND @fechaHasta = fecha_Reserva_Hasta) OR 
+			(@FechaDesde >= fecha_Reserva_Desde AND @fechaHasta <= fecha_Reserva_Hasta)
+		)
+
+		AND idEstadoReserva in (3,4,5)
+
+		AND		idTipo = @tipoHabitacion
+
+
 	END
+	
 
+	select nombreHotel,HABITACION,REGIMEN,PrecioPorNoche as 'Precio por Noche',TOTAL from #tmpReserva
 END
-
 
 --Inserta (o da de alta) una reserva.
 GO
@@ -1817,7 +1893,9 @@ begin
 	select   @idFactura=max(f.idFactura) from [BIG_DATA].[Factura] f 
 
 	insert into [BIG_DATA].[Item] values (@idFactura,@cantidad,@monto,@idEstadia)
-
+	
+	UPDATE Big_data.Factura set total=(select f.total from BIG_DATA.Factura f where f.idFactura=@idFactura)+@monto where idFactura=@idFactura
+	
 END
 
 --Crea una nueva factura para una estadía determinada.
@@ -1848,5 +1926,3 @@ BEGIN
 	end
 
 END
-	
-
